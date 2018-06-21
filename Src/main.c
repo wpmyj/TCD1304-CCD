@@ -51,6 +51,7 @@ DMA_HandleTypeDef hdma_adc3;
 TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim13;
+TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN PV */
 static uint16_t TCD_SensorData[ ADC_CFG_DATASIZE ];
@@ -67,8 +68,10 @@ static void MX_ADC3_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM13_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_TIM14_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+                                
                                 
                                 
                                 
@@ -119,10 +122,12 @@ int main(void)
   MX_TIM8_Init();
   MX_TIM13_Init();
   MX_TIM5_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
     HAL_TIM_PWM_Start( &htim8, TIM_CHANNEL_1 );
     HAL_TIM_PWM_Start_IT( &htim5, TIM_CHANNEL_1 );
+    HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );
     htim8.Instance->CR1 &= (~TIM_CR1_CEN);
     
     /* Start the DMA to move data from ADC to RAM */
@@ -285,7 +290,7 @@ static void MX_TIM5_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 50;
+  sConfigOC.Pulse = 1000;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_OC_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -401,6 +406,41 @@ static void MX_TIM13_Init(void)
   }
 
   HAL_TIM_MspPostInit(&htim13);
+
+}
+
+/* TIM14 init function */
+static void MX_TIM14_Init(void)
+{
+
+  TIM_OC_InitTypeDef sConfigOC;
+
+  htim14.Instance = TIM14;
+  htim14.Init.Prescaler = 53;
+  htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim14.Init.Period = 40000;
+  htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  if (HAL_TIM_PWM_Init(&htim14) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 50;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  HAL_TIM_MspPostInit(&htim14);
 
 }
 

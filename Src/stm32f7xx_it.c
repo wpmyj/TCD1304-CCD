@@ -74,16 +74,15 @@ void SysTick_Handler(void)
 */
 void TIM5_IRQHandler(void)
 {
-    /* USER CODE BEGIN TIM5_IRQn 0 */
+  /* USER CODE BEGIN TIM5_IRQn 0 */
     extern TIM_HandleTypeDef htim8;
     htim8.Instance->CR1 = (TIM_CR1_CEN);
 
-    /* USER CODE END TIM5_IRQn 0 */
-    HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE END TIM5_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE BEGIN TIM5_IRQn 1 */
 
-    /* USER CODE BEGIN TIM5_IRQn 1 */
-
-    /* USER CODE END TIM5_IRQn 1 */
+  /* USER CODE END TIM5_IRQn 1 */
 }
 
 /**
@@ -91,15 +90,15 @@ void TIM5_IRQHandler(void)
 */
 void DMA2_Stream0_IRQHandler(void)
 {
-    /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
+  /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
     extern TIM_HandleTypeDef htim8;
     htim8.Instance->CR1 &= (~TIM_CR1_CEN);
 
-    /* USER CODE END DMA2_Stream0_IRQn 0 */
-    HAL_DMA_IRQHandler(&hdma_adc3);
-    /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
+  /* USER CODE END DMA2_Stream0_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc3);
+  /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
 
-    /* USER CODE END DMA2_Stream0_IRQn 1 */
+  /* USER CODE END DMA2_Stream0_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

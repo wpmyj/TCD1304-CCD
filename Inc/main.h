@@ -50,7 +50,6 @@
 /* Private define ------------------------------------------------------------*/
 #define ADC_CFG_DATASIZE 3694
 #define TIM_ADC_SAMPLINGRATE 500000
-#define TCD_FM_CLK 2000000
 
 #define LCD_B0_Pin GPIO_PIN_4
 #define LCD_B0_GPIO_Port GPIOE
@@ -254,8 +253,6 @@
 #define FMC_D15_GPIO_Port GPIOD
 #define ARDUINO_A1_Pin GPIO_PIN_10
 #define ARDUINO_A1_GPIO_Port GPIOF
-#define ARDUINO_A2_Pin GPIO_PIN_9
-#define ARDUINO_A2_GPIO_Port GPIOF
 #define TCD_fM_Pin GPIO_PIN_8
 #define TCD_fM_GPIO_Port GPIOF
 #define FMC_SDCKE0_Pin GPIO_PIN_3
