@@ -123,6 +123,7 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM5_Init();
   MX_TIM14_Init();
+  
   /* USER CODE BEGIN 2 */
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
     HAL_TIM_PWM_Start( &htim8, TIM_CHANNEL_1 );
@@ -132,7 +133,6 @@ int main(void)
     
     /* Start the DMA to move data from ADC to RAM */
     HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, ADC_CFG_DATASIZE );
-    
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -252,7 +252,7 @@ static void MX_ADC3_Init(void)
 
 }
 
-/* TIM5 init function */
+/* TIM5 init function ICG */
 static void MX_TIM5_Init(void)
 {
 
@@ -261,11 +261,11 @@ static void MX_TIM5_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 53;
+  htim5.Init.Prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / TIM_FM_HZ - 1U;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 40000;
+  htim5.Init.Period = TIM_FM_HZ / (1000U / CFG_DEFAULT_ICG_PERIOD_MS) - 1U;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -282,7 +282,7 @@ static void MX_TIM5_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
   {
@@ -290,7 +290,7 @@ static void MX_TIM5_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 1000;
+  sConfigOC.Pulse = TIM_FM_HZ / (1000000U / CFG_DEFAULT_ICG_PULSE_US);
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_OC_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -343,7 +343,7 @@ static void MX_TIM8_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 216;
+  sConfigOC.Pulse = htim8.Init.Period / 2U;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -397,7 +397,7 @@ static void MX_TIM13_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 26;
+  sConfigOC.Pulse = htim13.Init.Period / 2U;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim13, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -416,9 +416,9 @@ static void MX_TIM14_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim14.Instance = TIM14;
-  htim14.Init.Prescaler = 53;
+  htim14.Init.Prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / TIM_FM_HZ - 1U;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 40000;
+  htim14.Init.Period = TIM_FM_HZ / (1000U / CFG_DEFAULT_SH_PERIOD_MS) - 1U;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -432,7 +432,7 @@ static void MX_TIM14_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 50;
+  sConfigOC.Pulse = TIM_FM_HZ / (1000000U / CFG_DEFAULT_SH_PULSE_US);
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)

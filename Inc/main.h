@@ -49,7 +49,12 @@
 
 /* Private define ------------------------------------------------------------*/
 #define ADC_CFG_DATASIZE 3694
-#define TIM_ADC_SAMPLINGRATE 500000
+#define TIM_ADC_SAMPLINGRATE_HZ 500000
+#define TIM_FM_HZ 2000000
+#define CFG_DEFAULT_ICG_PERIOD_MS 50
+#define CFG_DEFAULT_SH_PERIOD_MS 10
+#define CFG_DEFAULT_SH_PULSE_US 2
+#define CFG_DEFAULT_ICG_PULSE_US 5
 
 #define LCD_B0_Pin GPIO_PIN_4
 #define LCD_B0_GPIO_Port GPIOE
