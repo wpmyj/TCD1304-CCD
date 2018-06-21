@@ -94,7 +94,9 @@ void DMA2_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
     extern TIM_HandleTypeDef htim8;
+    extern uint32_t TDC_SpectrumsAcquired;
     htim8.Instance->CR1 &= (~TIM_CR1_CEN);
+    TDC_SpectrumsAcquired++;
 
   /* USER CODE END DMA2_Stream0_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc3);

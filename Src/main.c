@@ -59,6 +59,9 @@ DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 static uint16_t TCD_SensorData[ ADC_CFG_DATASIZE ];
+uint32_t TDC_SpectrumsAcquired = 0U;
+
+static char strBuf[128];
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE END PV */
@@ -148,7 +151,8 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     HAL_Delay(1000);
-      
+    sprintf(strBuf, "# of Spectrums = %d\r\n", TDC_SpectrumsAcquired);
+    HAL_UART_Transmit(&huart1, (uint8_t *)strBuf, strlen(strBuf), 1000U);
   }
   /* USER CODE END 3 */
 
