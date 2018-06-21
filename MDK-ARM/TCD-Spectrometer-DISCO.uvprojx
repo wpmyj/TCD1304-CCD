@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F746xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;       ../Drivers/STM32F7xx_HAL_Driver/Inc;       ../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;       ../Drivers/CMSIS/Device/ST/STM32F7xx/Include;       ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;../Bsp</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -511,6 +511,16 @@
               <FileName>system_stm32f7xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>..//Src/system_stm32f7xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Sensor</GroupName>
+          <Files>
+            <File>
+              <FileName>tcd1304.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\tcd1304.c</FilePath>
             </File>
           </Files>
         </Group>
