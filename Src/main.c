@@ -114,7 +114,7 @@ int main(void)
   MX_TIM8_Init();
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
-
+    HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
   /* USER CODE END 2 */
 
   /* Infinite loop */
