@@ -52,6 +52,8 @@ TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim13;
 
 /* USER CODE BEGIN PV */
+static uint16_t TCD_SensorData[ ADC_CFG_DATASIZE ];
+
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE END PV */
@@ -115,6 +117,11 @@ int main(void)
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
+    HAL_TIM_PWM_Start( &htim8, TIM_CHANNEL_1 );
+    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
+    
+    /* Start the DMA to move data from ADC to RAM */
+    HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, ADC_CFG_DATASIZE );
     
   /* USER CODE END 2 */
 
