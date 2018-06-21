@@ -48,6 +48,7 @@
 ADC_HandleTypeDef hadc3;
 DMA_HandleTypeDef hdma_adc3;
 
+TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim13;
 
@@ -65,8 +66,10 @@ static void MX_DMA_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM13_Init(void);
+static void MX_TIM5_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+                                
                                 
                                 
 
@@ -115,9 +118,11 @@ int main(void)
   MX_ADC3_Init();
   MX_TIM8_Init();
   MX_TIM13_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
     HAL_TIM_PWM_Start( &htim8, TIM_CHANNEL_1 );
+    HAL_TIM_PWM_Start_IT( &htim5, TIM_CHANNEL_1 );
     htim8.Instance->CR1 &= (~TIM_CR1_CEN);
     
     /* Start the DMA to move data from ADC to RAM */
@@ -131,10 +136,10 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
-      
+
   /* USER CODE BEGIN 3 */
     HAL_Delay(1000);
-    htim8.Instance->CR1 = (TIM_CR1_CEN);
+    
       
   }
   /* USER CODE END 3 */
@@ -242,10 +247,60 @@ static void MX_ADC3_Init(void)
 
 }
 
+/* TIM5 init function */
+static void MX_TIM5_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+  TIM_OC_InitTypeDef sConfigOC;
+
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 53;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 40000;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  if (HAL_TIM_OC_Init(&htim5) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 50;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_OC_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  HAL_TIM_MspPostInit(&htim5);
+
+}
+
 /* TIM8 init function */
 static void MX_TIM8_Init(void)
 {
-  uint32_t period = 4U * HAL_RCC_GetPCLK1Freq() / TIM_ADC_SAMPLINGRATE;
+
   TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_OC_InitTypeDef sConfigOC;
@@ -254,7 +309,7 @@ static void MX_TIM8_Init(void)
   htim8.Instance = TIM8;
   htim8.Init.Prescaler = 0;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = period;
+  htim8.Init.Period = 431;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -276,14 +331,14 @@ static void MX_TIM8_Init(void)
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1;
   sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = period / 2U;
+  sConfigOC.Pulse = 216;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -337,7 +392,7 @@ static void MX_TIM13_Init(void)
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = htim13.Init.Period / 2U;
+  sConfigOC.Pulse = 26;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim13, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -413,7 +468,6 @@ static void MX_DMA_Init(void)
      PF1   ------> FMC_A1
      PI9   ------> LTDC_VSYNC
      PH14   ------> DCMI_D4
-     PI0   ------> S_TIM5_CH4
      PA9   ------> USART1_TX
      PK1   ------> LTDC_G6
      PK2   ------> LTDC_G7
@@ -846,14 +900,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
   HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : ARDUINO_PWM_CS_D10_Pin */
-  GPIO_InitStruct.Pin = ARDUINO_PWM_CS_D10_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF2_TIM5;
-  HAL_GPIO_Init(ARDUINO_PWM_CS_D10_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : VCP_TX_Pin */
   GPIO_InitStruct.Pin = VCP_TX_Pin;
