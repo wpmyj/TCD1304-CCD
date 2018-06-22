@@ -47,6 +47,7 @@ int32_t TCD_PORT_ConfigMasterClock(const uint32_t freq);
 int32_t TCD_PORT_ConfigSHClock(const uint32_t integrationTime);
 int32_t TCD_PORT_ConfigICGClock(const uint32_t freq);
 
+int32_t TCD_PORT_InitADC(void);
 void    TCD_PORT_ConfigADCTrigger(void);
 
 #ifdef __cplusplus

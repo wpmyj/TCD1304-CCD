@@ -325,6 +325,55 @@ void TCD_PORT_ConfigADCTrigger(void)
     htim8.Instance->CR1 &= (~TIM_CR1_CEN);
 }
 
+/*******************************************************************************
+ * @brief
+ * @param
+ * @retval
+ *
+ ******************************************************************************/
+int32_t TCD_PORT_InitADC(void)
+{
+    ADC_ChannelConfTypeDef sConfig;
+    int32_t err = 0;
+
+    /**
+     * Configure the global features of the ADC
+     * (Clock, Resolution, Data Alignment and number of conversion)
+     */
+    hadc3.Instance = ADC3;
+    hadc3.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+    hadc3.Init.Resolution = ADC_RESOLUTION_12B;
+    hadc3.Init.ScanConvMode = DISABLE;
+    hadc3.Init.ContinuousConvMode = DISABLE;
+    hadc3.Init.DiscontinuousConvMode = DISABLE;
+    hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+    hadc3.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T8_TRGO;
+    hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+    hadc3.Init.NbrOfConversion = 1;
+    hadc3.Init.DMAContinuousRequests = ENABLE;
+    hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+
+    if ( HAL_ADC_Init( &hadc3 ) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    /**
+     * Configure for the selected ADC regular channel its
+     * corresponding rank in the sequencer and its sample time.
+     */
+    sConfig.Channel = ADC_CHANNEL_4;
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+
+    if ( HAL_ADC_ConfigChannel( &hadc3, &sConfig ) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    return err;
+}
+
 /**
  *******************************************************************************
  *                        PRIVATE IMPLEMENTATION SECTION
