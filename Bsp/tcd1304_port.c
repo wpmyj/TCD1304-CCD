@@ -52,6 +52,21 @@ static uint16_t *pSensorData;
  */
 
 /*******************************************************************************
+ * @Brief   Start to generate ICG pulses and SH pulses
+ * @param   None
+ * @retval  None
+ ******************************************************************************/
+void TCD_PORT_Run(void)
+{
+    TCD_PORT_ICG_SET_DELAY( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
+    TCD_PORT_SH_SET_DELAY( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
+    
+    HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );      /* ICG */
+    HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );        /* SH */
+    HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );        /* fM */
+}
+
+/*******************************************************************************
  * @brief
  * @param
  * @retval

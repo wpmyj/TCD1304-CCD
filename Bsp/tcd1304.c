@@ -55,10 +55,16 @@ static void TCD_ADC_Init(void);
  ******************************************************************************/
 void TCD_Init(void)
 {
+    /* Configure and start the ADC + DMA */
     TCD_ADC_Init();
+    
+    /* Configure and start the timers */
     TCD_FM_Init();
     TCD_ICG_Init();
     TCD_SH_Init();
+    
+    /* Start to generate ICG and SH pulses */
+    TCD_PORT_Run();
 }
 
 /**
@@ -75,33 +81,30 @@ void TCD_Init(void)
 static void TCD_FM_Init(void)
 {
     TCD_PORT_ConfigMasterClock( CFG_FM_FREQUENCY_HZ );
-
-    HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
 }
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
+ * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (TIM2)
  * @param   None
  * @retval  None
+ *
  ******************************************************************************/
 static void TCD_ICG_Init(void)
 {
     TCD_PORT_ConfigICGClock( CFG_ICG_DEFAULT_FREQ_HZ );
-
-    HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );
 }
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
+ * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (TIM14)
  * @param   None
  * @retval  None
+ *
  ******************************************************************************/
 static void TCD_SH_Init(void)
 {
     TCD_PORT_ConfigSHClock( CFG_SH_DEFAULT_PERIOD_US );
-
-    HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );
 }
+
 
 /*******************************************************************************
  * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
