@@ -176,6 +176,62 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
 
     return err;
 }
+
+/*******************************************************************************
+ * @brief
+ * @param
+ * @retval
+ *
+ ******************************************************************************/
+int32_t TCD_PORT_ConfigSHClock(const uint32_t intTime_us)
+{
+    TIM_OC_InitTypeDef sConfigOC;
+    GPIO_InitTypeDef GPIO_InitStruct;
+    int32_t err = 0;
+    uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
+    uint32_t period = intTime_us * CFG_FM_FREQUENCY_HZ / 1000000U - 1U;
+    uint32_t pulse = CFG_SH_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
+
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM14_CLK_ENABLE();
+
+    /* TIM14 GPIO Configuration. PF9------> TIM14_CH1 */
+    GPIO_InitStruct.Pin = GPIO_PIN_9;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF9_TIM14;
+    HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+    htim14.Instance = TIM14;
+    htim14.Init.Prescaler = prescaler;
+    htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim14.Init.Period = period;
+    htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    if ( HAL_TIM_Base_Init( &htim14 ) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    if ( HAL_TIM_PWM_Init( &htim14 ) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = pulse;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+
+    if ( HAL_TIM_PWM_ConfigChannel( &htim14, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    return err;
+}
+
 /**
  *******************************************************************************
  *                        PRIVATE IMPLEMENTATION SECTION

@@ -103,38 +103,8 @@ static void TCD_ICG_Init(void)
  ******************************************************************************/
 static void TCD_SH_Init(void)
 {
-    TIM_OC_InitTypeDef sConfigOC;
-    uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
-    uint32_t period = CFG_SH_DEFAULT_PERIOD_US * CFG_FM_FREQUENCY_HZ / 1000000U - 1U;
-    uint32_t pulse = CFG_SH_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
+    TCD_PORT_ConfigSHClock( CFG_SH_DEFAULT_PERIOD_US );
 
-    htim14.Instance = TIM14;
-    htim14.Init.Prescaler = prescaler;
-    htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim14.Init.Period = period;
-    htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-    if ( HAL_TIM_Base_Init( &htim14 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    if ( HAL_TIM_PWM_Init( &htim14 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = pulse;
-    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-
-    if ( HAL_TIM_PWM_ConfigChannel( &htim14, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    HAL_TIM_MspPostInit( &htim14 );
     HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );
 }
 
