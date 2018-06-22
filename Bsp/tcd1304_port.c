@@ -40,6 +40,8 @@ extern TIM_HandleTypeDef htim14;
 extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
+static uint16_t *pSensorData;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -382,7 +384,18 @@ int32_t TCD_PORT_InitADC(void)
  ******************************************************************************/
 int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
 {
+    if(dataBuffer == NULL)
+    {
+        return -1;
+    }
+    pSensorData = dataBuffer;
+
     return (uint32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
+}
+
+__weak void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
+{
+    /* The user implements its own functionality */
 }
 
 /**
@@ -414,8 +427,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
     TCD_PORT_DISABLE_ADC_TRIGGER();
 
-    extern uint32_t TDC_SpectrumsAcquired;
-    TDC_SpectrumsAcquired++;
+    TCD_PORT_CCD_ReadCompletedCallback( pSensorData );
 
     HAL_DMA_IRQHandler( &hdma_adc3 );
 }

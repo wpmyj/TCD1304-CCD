@@ -83,13 +83,19 @@ int main(void)
     MX_DMA_Init();
     MX_USART1_UART_Init();
     TCD_Init();
-    
+
     while ( 1 )
     {
         HAL_Delay( 1000 );
         sprintf( strBuf, "# of Spectrums = %d\r\n", TDC_SpectrumsAcquired );
         HAL_UART_Transmit( &huart1, (uint8_t *) strBuf, strlen( strBuf ), 1000U );
     }
+}
+
+/* This function is called from the portable layer in interupt context. */
+void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
+{
+    TDC_SpectrumsAcquired++;
 }
 
 /**

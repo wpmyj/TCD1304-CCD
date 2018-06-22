@@ -51,6 +51,13 @@ int32_t TCD_PORT_InitADC(void);
 void    TCD_PORT_ConfigADCTrigger(void);
 int32_t TCD_PORT_StartADC(uint16_t *dataBuffer);
 
+/** 
+ * This function is implemented with the keyword __weak.
+ * The user implements its own function. The linker will place the correct
+ * implementation in the binary output.
+ */
+void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf);
+
 #ifdef __cplusplus
 }
 #endif
