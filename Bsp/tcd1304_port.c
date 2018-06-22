@@ -402,8 +402,7 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
  */
 void TIM2_IRQHandler(void)
 {
-    extern TIM_HandleTypeDef htim8;
-    htim8.Instance->CR1 = (TIM_CR1_CEN);
+    TCD_PORT_ENABLE_ADC_TRIGGER();
 
     HAL_TIM_IRQHandler( &htim2 );
 }
@@ -413,12 +412,11 @@ void TIM2_IRQHandler(void)
  */
 void DMA2_Stream0_IRQHandler(void)
 {
-    extern TIM_HandleTypeDef htim8;
+    TCD_PORT_DISABLE_ADC_TRIGGER();
+
     extern uint32_t TDC_SpectrumsAcquired;
-    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
     TDC_SpectrumsAcquired++;
 
     HAL_DMA_IRQHandler( &hdma_adc3 );
-
 }
 /****************************** END OF FILE ***********************************/

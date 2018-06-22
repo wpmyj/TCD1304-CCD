@@ -66,6 +66,10 @@ extern "C"
 #define CFG_ICG_DEFAULT_PULSE_US            (5U)
 #define CFG_ICG_DEFAULT_PULSE_DELAY_CNT     (0U)
 
+
+/* Useful macro calls */
+#define TCD_PORT_ENABLE_ADC_TRIGGER()       TIM8->CR1 = (TIM_CR1_CEN)
+#define TCD_PORT_DISABLE_ADC_TRIGGER()      TIM8->CR1 &= (~TIM_CR1_CEN)
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
