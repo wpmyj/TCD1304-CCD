@@ -62,6 +62,7 @@ extern "C"
  * Minimum ICG pulse width is >= 5 us.
  */
 #define CFG_ICG_DEFAULT_PERIOD_MS           (100U)
+#define CFG_ICG_DEFAULT_FREQ_HZ             (1000U / CFG_ICG_DEFAULT_PERIOD_MS)
 #define CFG_ICG_DEFAULT_PULSE_US            (5U)
 #define CFG_ICG_DEFAULT_PULSE_DELAY_CNT     (0U)
 
