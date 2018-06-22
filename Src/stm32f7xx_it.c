@@ -40,13 +40,11 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_adc3;
-extern TIM_HandleTypeDef htim5;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 
 /******************************************************************************/
-/*            Cortex-M7 Processor Interruption and Exception Handlers         */ 
+/*            Cortex-M7 Processor Interruption and Exception Handlers         */
 /******************************************************************************/
 
 /**
@@ -70,40 +68,6 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f7xx.s).                    */
 /******************************************************************************/
-
-/**
-* @brief This function handles TIM5 global interrupt.
-*/
-void TIM5_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM5_IRQn 0 */
-    extern TIM_HandleTypeDef htim8;
-    htim8.Instance->CR1 = (TIM_CR1_CEN);
-
-  /* USER CODE END TIM5_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim5);
-  /* USER CODE BEGIN TIM5_IRQn 1 */
-
-  /* USER CODE END TIM5_IRQn 1 */
-}
-
-/**
-* @brief This function handles DMA2 stream0 global interrupt.
-*/
-void DMA2_Stream0_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
-    extern TIM_HandleTypeDef htim8;
-    extern uint32_t TDC_SpectrumsAcquired;
-    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
-    TDC_SpectrumsAcquired++;
-
-  /* USER CODE END DMA2_Stream0_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc3);
-  /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
-
-  /* USER CODE END DMA2_Stream0_IRQn 1 */
-}
 
 /**
 * @brief This function handles DMA2 stream2 global interrupt.

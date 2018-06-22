@@ -152,7 +152,7 @@
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
-          <SubType>0</SubType>
+          <SubType>266</SubType>
           <ItemText>TCD_SensorData</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
