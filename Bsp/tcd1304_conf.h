@@ -33,15 +33,37 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 /* Exported typedefs ---------------------------------------------------------*/
 /* Exported defines ----------------------------------------------------------*/
-#define CFG_SENSOR_NUM_PIXELS               (3694U)
-#define CFG_ADC_SAMPLINGRATE_HZ             (500000U)
+
+/* The CCD sensor requires a master clock between 0.4 - 4 MHz */
 #define CFG_FM_FREQUENCY_HZ                 (2000000U)
-#define CFG_DEFAULT_ICG_PERIOD_MS           (50U)
-#define CFG_DEFAULT_SH_PERIOD_MS            (10U)
-#define CFG_DEFAULT_SH_PULSE_US             (2U)
-#define CFG_DEFAULT_ICG_PULSE_US            (5U)
-#define CFG_DEFAULT_SH_PULSE_DELAY          (2U)
-#define CFG_DEFAULT_ICG_PULSE_DELAY         (0U)
+
+/* The total number of AD samples to be acquired with the ADC */
+#define CFG_CCD_NUM_PIXELS                  (3694U)
+#define CFG_ADC_SAMPLING_RATE_HZ            (CFG_FM_FREQUENCY_HZ / 4U)
+
+/**
+ * Electronic shutter.
+ * In normal mode the shutter period is equal the ICG period.
+ * In electronic shutter mode the period is < ICG period. The period og SH controls
+ * the integration time of the CCD.
+ *
+ * The SH period must conform the criteria:
+ * T_ICG = N x T_SH, where N is an integer > 0.
+ *
+ * Minimum integration time is >= 10 us.
+ * Minimum SH pulse width is >= 2 us.
+ */
+#define CFG_SH_DEFAULT_PERIOD_US            (1000U)
+#define CFG_SH_DEFAULT_PULSE_US             (2U)
+#define CFG_SH_DEFAULT_PULSE_DELAY_CNT      (15U)
+
+/**
+ * The period time of the ICG pulse determines the sensor data readout period.
+ * Minimum ICG pulse width is >= 5 us.
+ */
+#define CFG_ICG_DEFAULT_PERIOD_MS           (100U)
+#define CFG_ICG_DEFAULT_PULSE_US            (5U)
+#define CFG_ICG_DEFAULT_PULSE_DELAY_CNT     (0U)
 
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/

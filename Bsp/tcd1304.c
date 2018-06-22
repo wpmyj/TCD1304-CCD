@@ -34,7 +34,7 @@ extern TIM_HandleTypeDef htim14;
 extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
-uint16_t TCD_SensorData[ CFG_SENSOR_NUM_PIXELS ];
+uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
 
 /* Private function prototypes -----------------------------------------------*/
 static void TCD_FM_Init(void);
@@ -124,8 +124,8 @@ static void TCD_ICG_Init(void)
     TIM_MasterConfigTypeDef sMasterConfig;
     TIM_OC_InitTypeDef sConfigOC;
     uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
-    uint32_t period = CFG_DEFAULT_ICG_PERIOD_MS * CFG_FM_FREQUENCY_HZ / 1000U - 1U;
-    uint32_t pulse = CFG_DEFAULT_ICG_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
+    uint32_t period = CFG_ICG_DEFAULT_PERIOD_MS * CFG_FM_FREQUENCY_HZ / 1000U - 1U;
+    uint32_t pulse = CFG_ICG_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
 
     htim2.Instance = TIM2;
     htim2.Init.Prescaler = prescaler;
@@ -133,7 +133,7 @@ static void TCD_ICG_Init(void)
     htim2.Init.Period = period;
     htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    
+
     if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
     {
         _Error_Handler(__FILE__, __LINE__);
@@ -182,8 +182,8 @@ static void TCD_SH_Init(void)
 {
     TIM_OC_InitTypeDef sConfigOC;
     uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
-    uint32_t period = CFG_DEFAULT_SH_PERIOD_MS * CFG_FM_FREQUENCY_HZ / 1000U - 1U;
-    uint32_t pulse = CFG_DEFAULT_SH_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
+    uint32_t period = CFG_SH_DEFAULT_PERIOD_US * CFG_FM_FREQUENCY_HZ / 1000000U - 1U;
+    uint32_t pulse = CFG_SH_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
 
     htim14.Instance = TIM14;
     htim14.Init.Prescaler = prescaler;
@@ -329,7 +329,7 @@ static void TCD_ADC_Init(void)
     }
 
     /**
-     * Configure for the selected ADC regular channel its 
+     * Configure for the selected ADC regular channel its
      * corresponding rank in the sequencer and its sample time.
      */
     sConfig.Channel = ADC_CHANNEL_4;
@@ -342,7 +342,7 @@ static void TCD_ADC_Init(void)
     }
 
     /* Start the DMA to move data from ADC to RAM */
-    HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, CFG_SENSOR_NUM_PIXELS );
+    HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, CFG_CCD_NUM_PIXELS );
 }
 
 /**
