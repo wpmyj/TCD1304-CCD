@@ -79,37 +79,8 @@ void TCD_Init(void)
  ******************************************************************************/
 static void TCD_FM_Init(void)
 {
-    TIM_OC_InitTypeDef sConfigOC;
-    uint32_t period = (HAL_RCC_GetSysClockFreq()) / CFG_FM_FREQUENCY_HZ - 1U;
+    TCD_PORT_ConfigMasterClock( CFG_FM_FREQUENCY_HZ );
 
-    htim13.Instance = TIM13;
-    htim13.Init.Prescaler = 0;
-    htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim13.Init.Period = period;
-    htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-    if ( HAL_TIM_Base_Init( &htim13 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    if ( HAL_TIM_PWM_Init( &htim13 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = period / 2U;
-    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-
-    if ( HAL_TIM_PWM_ConfigChannel( &htim13, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
-    {
-        _Error_Handler( __FILE__, __LINE__ );
-    }
-
-    HAL_TIM_MspPostInit( &htim13 );
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );
 }
 
