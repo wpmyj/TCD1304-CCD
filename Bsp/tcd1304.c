@@ -41,7 +41,7 @@ static void TCD_FM_Init(void);
 static void TCD_ICG_Init(void);
 static void TCD_SH_Init(void);
 static void TCD_ADC_Init(void);
-static void TCD_ADC_TRIG_Init(void);
+static void TCD_ADC_TRIG_Config(void);
 
 /* External functions --------------------------------------------------------*/
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -61,7 +61,7 @@ void TCD_Init(void)
 {
     TCD_FM_Init();
     TCD_ADC_Init();
-    TCD_ADC_TRIG_Init();
+    TCD_ADC_TRIG_Config();
     TCD_ICG_Init();
     TCD_SH_Init();
 }
@@ -220,7 +220,7 @@ static void TCD_SH_Init(void)
  * @param   None
  * @retval  None
  ******************************************************************************/
-static void TCD_ADC_TRIG_Init(void)
+static void TCD_ADC_TRIG_Config(void)
 {
     TIM_ClockConfigTypeDef sClockSourceConfig;
     TIM_MasterConfigTypeDef sMasterConfig;
