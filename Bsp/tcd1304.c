@@ -41,7 +41,6 @@ static void TCD_FM_Init(void);
 static void TCD_ICG_Init(void);
 static void TCD_SH_Init(void);
 static void TCD_ADC_Init(void);
-static void TCD_ADC_TRIG_Config(void);
 
 /* External functions --------------------------------------------------------*/
 extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -59,9 +58,8 @@ extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
  ******************************************************************************/
 void TCD_Init(void)
 {
-    TCD_FM_Init();
     TCD_ADC_Init();
-    TCD_ADC_TRIG_Config();
+    TCD_FM_Init();
     TCD_ICG_Init();
     TCD_SH_Init();
 }
@@ -113,22 +111,18 @@ static void TCD_SH_Init(void)
  * @param   None
  * @retval  None
  ******************************************************************************/
-static void TCD_ADC_TRIG_Config(void)
-{
-    TCD_PORT_ConfigADCTrigger();
-}
-
-/*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
- * @param   None
- * @retval  None
- ******************************************************************************/
 static void TCD_ADC_Init(void)
 {
+    /* Initialize the ADC hardware and DMA */
     TCD_PORT_InitADC();
+
+    /* Initialize the timer used to trigger AD conversion */
+    TCD_PORT_ConfigADCTrigger();
 
     /* Start the DMA to move data from ADC to RAM */
     HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, CFG_CCD_NUM_PIXELS );
+
+    /* From now on the AD conversion is controlled by hardware */
 }
 
 /**
