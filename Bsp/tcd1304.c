@@ -31,7 +31,6 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim8;
 extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
-extern DMA_HandleTypeDef hdma_adc3;
 
 uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
 
@@ -42,7 +41,6 @@ static void TCD_SH_Init(void);
 static void TCD_ADC_Init(void);
 
 /* External functions --------------------------------------------------------*/
-extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /**
  *******************************************************************************
@@ -125,33 +123,4 @@ static void TCD_ADC_Init(void)
     TCD_PORT_StartADC( TCD_SensorData );
 }
 
-/**
- *******************************************************************************
- *                         INTERRUPT HANDLERS
- *******************************************************************************
- */
-/**
- * @brief This function handles TIM5 (ICG PULSE) global interrupt.
- */
-void TIM2_IRQHandler(void)
-{
-    extern TIM_HandleTypeDef htim8;
-    htim8.Instance->CR1 = (TIM_CR1_CEN);
-
-    HAL_TIM_IRQHandler( &htim2 );
-}
-
-/**
- * @brief This function handles DMA2 stream0 global interrupt.
- */
-void DMA2_Stream0_IRQHandler(void)
-{
-    extern TIM_HandleTypeDef htim8;
-    extern uint32_t TDC_SpectrumsAcquired;
-    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
-    TDC_SpectrumsAcquired++;
-
-    HAL_DMA_IRQHandler( &hdma_adc3 );
-
-}
 /****************************** END OF FILE ***********************************/

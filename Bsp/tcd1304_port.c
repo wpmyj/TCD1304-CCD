@@ -391,4 +391,34 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
  *******************************************************************************
  */
 
+/**
+ *******************************************************************************
+ *                         INTERRUPT HANDLERS
+ *******************************************************************************
+ */
+
+/**
+ * @brief This function handles TIM5 (ICG PULSE) global interrupt.
+ */
+void TIM2_IRQHandler(void)
+{
+    extern TIM_HandleTypeDef htim8;
+    htim8.Instance->CR1 = (TIM_CR1_CEN);
+
+    HAL_TIM_IRQHandler( &htim2 );
+}
+
+/**
+ * @brief This function handles DMA2 stream0 global interrupt.
+ */
+void DMA2_Stream0_IRQHandler(void)
+{
+    extern TIM_HandleTypeDef htim8;
+    extern uint32_t TDC_SpectrumsAcquired;
+    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
+    TDC_SpectrumsAcquired++;
+
+    HAL_DMA_IRQHandler( &hdma_adc3 );
+
+}
 /****************************** END OF FILE ***********************************/
