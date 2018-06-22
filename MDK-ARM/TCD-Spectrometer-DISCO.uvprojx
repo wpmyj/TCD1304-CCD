@@ -522,6 +522,11 @@
               <FileType>1</FileType>
               <FilePath>..\Bsp\tcd1304.c</FilePath>
             </File>
+            <File>
+              <FileName>tcd1304_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\tcd1304_port.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
