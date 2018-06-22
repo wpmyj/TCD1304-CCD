@@ -27,7 +27,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim8;
 extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
@@ -127,36 +127,36 @@ static void TCD_ICG_Init(void)
     uint32_t period = CFG_DEFAULT_ICG_PERIOD_MS * CFG_FM_FREQUENCY_HZ / 1000U - 1U;
     uint32_t pulse = CFG_DEFAULT_ICG_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
 
-    htim5.Instance = TIM5;
-    htim5.Init.Prescaler = prescaler;
-    htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim5.Init.Period = period;
-    htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-    if ( HAL_TIM_Base_Init( &htim5 ) != HAL_OK )
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = prescaler;
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = period;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    
+    if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
     {
-        _Error_Handler( __FILE__, __LINE__ );
+        _Error_Handler(__FILE__, __LINE__);
     }
 
     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 
-    if ( HAL_TIM_ConfigClockSource( &htim5, &sClockSourceConfig ) != HAL_OK )
+    if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
     {
-        _Error_Handler( __FILE__, __LINE__ );
+        _Error_Handler(__FILE__, __LINE__);
     }
 
-    if ( HAL_TIM_OC_Init( &htim5 ) != HAL_OK )
+    if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
     {
-        _Error_Handler( __FILE__, __LINE__ );
+        _Error_Handler(__FILE__, __LINE__);
     }
 
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
     sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 
-    if ( HAL_TIMEx_MasterConfigSynchronization( &htim5, &sMasterConfig ) != HAL_OK )
+    if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
     {
-        _Error_Handler( __FILE__, __LINE__ );
+        _Error_Handler(__FILE__, __LINE__);
     }
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -164,13 +164,13 @@ static void TCD_ICG_Init(void)
     sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
-    if ( HAL_TIM_OC_ConfigChannel( &htim5, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
+    if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
     {
-        _Error_Handler( __FILE__, __LINE__ );
+        _Error_Handler(__FILE__, __LINE__);
     }
 
-    HAL_TIM_MspPostInit( &htim5 );
-    HAL_TIM_PWM_Start_IT( &htim5, TIM_CHANNEL_1 );
+    HAL_TIM_MspPostInit(&htim2);
+    HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );
 }
 
 /*******************************************************************************
@@ -353,12 +353,12 @@ static void TCD_ADC_Init(void)
 /**
  * @brief This function handles TIM5 (ICG PULSE) global interrupt.
  */
-void TIM5_IRQHandler(void)
+void TIM2_IRQHandler(void)
 {
     extern TIM_HandleTypeDef htim8;
     htim8.Instance->CR1 = (TIM_CR1_CEN);
 
-    HAL_TIM_IRQHandler( &htim5 );
+    HAL_TIM_IRQHandler( &htim2 );
 }
 
 /**
