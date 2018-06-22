@@ -33,6 +33,16 @@ extern "C"
 /* Includes ------------------------------------------------------------------*/
 /* Exported typedefs ---------------------------------------------------------*/
 /* Exported defines ----------------------------------------------------------*/
+#define CFG_SENSOR_NUM_PIXELS               (3694U)
+#define CFG_ADC_SAMPLINGRATE_HZ             (500000U)
+#define CFG_FM_FREQUENCY_HZ                 (2000000U)
+#define CFG_DEFAULT_ICG_PERIOD_MS           (50U)
+#define CFG_DEFAULT_SH_PERIOD_MS            (10U)
+#define CFG_DEFAULT_SH_PULSE_US             (2U)
+#define CFG_DEFAULT_ICG_PULSE_US            (5U)
+#define CFG_DEFAULT_SH_PULSE_DELAY          (2U)
+#define CFG_DEFAULT_ICG_PULSE_DELAY         (0U)
+
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
