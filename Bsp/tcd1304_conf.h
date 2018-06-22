@@ -55,7 +55,7 @@ extern "C"
  */
 #define CFG_SH_DEFAULT_PERIOD_US            (1000U)
 #define CFG_SH_DEFAULT_PULSE_US             (2U)
-#define CFG_SH_DEFAULT_PULSE_DELAY_CNT      (15U)
+#define CFG_SH_DEFAULT_PULSE_DELAY_CNT      (1U)
 
 /**
  * The period time of the ICG pulse determines the sensor data readout period.
@@ -70,6 +70,10 @@ extern "C"
 /* Useful macro calls */
 #define TCD_PORT_ENABLE_ADC_TRIGGER()       TIM8->CR1 = (TIM_CR1_CEN)
 #define TCD_PORT_DISABLE_ADC_TRIGGER()      TIM8->CR1 &= (~TIM_CR1_CEN)
+
+#define TCD_PORT_ICG_SET_DELAY(cnt)         TIM2->CNT = TIM2->ARR - cnt
+#define TCD_PORT_SH_SET_DELAY(cnt)          TIM14->CNT = TIM14->ARR - cnt
+
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
