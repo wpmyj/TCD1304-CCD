@@ -31,7 +31,6 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim8;
 extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
-extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
 uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
@@ -119,10 +118,11 @@ static void TCD_ADC_Init(void)
     /* Initialize the timer used to trigger AD conversion */
     TCD_PORT_ConfigADCTrigger();
 
-    /* Start the DMA to move data from ADC to RAM */
-    HAL_ADC_Start_DMA( &hadc3, (uint32_t *) TCD_SensorData, CFG_CCD_NUM_PIXELS );
-
-    /* From now on the AD conversion is controlled by hardware */
+    /**
+     * Start the DMA to move data from ADC to RAM.
+     * From now on the AD conversion is controlled by hardware.
+     */
+    TCD_PORT_StartADC( TCD_SensorData );
 }
 
 /**

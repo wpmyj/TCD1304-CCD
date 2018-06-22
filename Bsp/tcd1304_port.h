@@ -49,6 +49,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq);
 
 int32_t TCD_PORT_InitADC(void);
 void    TCD_PORT_ConfigADCTrigger(void);
+int32_t TCD_PORT_StartADC(uint16_t *dataBuffer);
 
 #ifdef __cplusplus
 }

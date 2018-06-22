@@ -374,6 +374,17 @@ int32_t TCD_PORT_InitADC(void)
     return err;
 }
 
+/*******************************************************************************
+ * @brief
+ * @param
+ * @retval
+ *
+ ******************************************************************************/
+int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
+{
+    return (uint32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
+}
+
 /**
  *******************************************************************************
  *                        PRIVATE IMPLEMENTATION SECTION
