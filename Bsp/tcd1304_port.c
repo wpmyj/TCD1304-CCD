@@ -44,7 +44,6 @@ static uint16_t *pSensorData;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-extern void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /**
  *******************************************************************************
