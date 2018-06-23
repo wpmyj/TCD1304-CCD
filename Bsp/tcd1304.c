@@ -27,11 +27,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim8;
-extern TIM_HandleTypeDef htim13;
-extern TIM_HandleTypeDef htim14;
-
 uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,12 +52,12 @@ void TCD_Init(void)
 {
     /* Configure and start the ADC + DMA */
     TCD_ADC_Init();
-    
+
     /* Configure and start the timers */
     TCD_FM_Init();
     TCD_ICG_Init();
     TCD_SH_Init();
-    
+
     /* Start to generate ICG and SH pulses */
     TCD_PORT_Run();
 }
@@ -107,7 +102,7 @@ static void TCD_SH_Init(void)
 
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
+ * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (TIM8)
  * @param   None
  * @retval  None
  ******************************************************************************/
