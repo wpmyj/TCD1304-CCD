@@ -355,8 +355,37 @@ void TCD_PORT_ConfigADCTrigger(void)
 int32_t TCD_PORT_InitADC(void)
 {
     ADC_ChannelConfTypeDef sConfig;
+    GPIO_InitTypeDef GPIO_InitStruct;
     int32_t err = 0;
+    
+    /* Peripheral clock enable */
+    __HAL_RCC_ADC3_CLK_ENABLE();
+    
+    /* ADC input pin is connected to PF6 */
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init( GPIOF, &GPIO_InitStruct );
+    
+    /* ADC3 DMA Init */
+    hdma_adc3.Instance = DMA2_Stream0;
+    hdma_adc3.Init.Channel = DMA_CHANNEL_2;
+    hdma_adc3.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_adc3.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_adc3.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_adc3.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    hdma_adc3.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+    hdma_adc3.Init.Mode = DMA_CIRCULAR;
+    hdma_adc3.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_adc3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    
+    if ( HAL_DMA_Init( &hdma_adc3 ) != HAL_OK )
+    {
+      _Error_Handler( __FILE__, __LINE__ );
+    }
 
+    __HAL_LINKDMA( &hadc3, DMA_Handle, hdma_adc3 );
+    
     /**
      * Configure the global features of the ADC
      * (Clock, Resolution, Data Alignment and number of conversion)
