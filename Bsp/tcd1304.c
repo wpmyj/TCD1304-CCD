@@ -35,7 +35,7 @@ typedef struct
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static TCD_CONFIG_t TCD_config;
+static TCD_CONFIG_t *TCD_config;
 static TCD_PCB_t TCD_pcb;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,13 +57,14 @@ static void TCD_ADC_Init(void);
  * @param
  * @retval
  ******************************************************************************/
-int32_t TCD_Init(const TCD_CONFIG_t *config)
+int32_t TCD_Init(TCD_CONFIG_t *config)
 {
     if ( config == NULL )
     {
         return -1;
     }
     
+    TCD_config = config;
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
 

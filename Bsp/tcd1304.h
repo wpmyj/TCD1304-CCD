@@ -44,7 +44,7 @@ typedef struct
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-int32_t  TCD_Init(const TCD_CONFIG_t *config);
+int32_t  TCD_Init(TCD_CONFIG_t *config);
 uint32_t TCD_GetNumOfSpectrumsAcquired(void);
 
 #ifdef __cplusplus
