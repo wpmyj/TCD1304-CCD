@@ -26,14 +26,6 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct
 {
-    uint32_t avg;
-    uint32_t f_master;
-    uint32_t f_icg;
-    uint32_t t_int_us;
-} TCD_CONFIG_t;
-
-typedef struct
-{
     uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
     uint32_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
     uint32_t specIndex;
@@ -65,8 +57,13 @@ static void TCD_ADC_Init(void);
  * @param
  * @retval
  ******************************************************************************/
-void TCD_Init(void)
+int32_t TCD_Init(const TCD_CONFIG_t *config)
 {
+    if ( config == NULL )
+    {
+        return -1;
+    }
+
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
 
@@ -80,6 +77,8 @@ void TCD_Init(void)
 
     /* Start to generate ICG and SH pulses */
     TCD_PORT_Run();
+
+    return 0;
 }
 
 /*******************************************************************************

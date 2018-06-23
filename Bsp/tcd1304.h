@@ -32,11 +32,19 @@ extern "C"
 #include "tcd1304_port.h"
 
 /* Exported typedefs ---------------------------------------------------------*/
+typedef struct
+{
+    uint32_t avg;
+    uint32_t f_master;
+    uint32_t f_icg;
+    uint32_t t_int_us;
+} TCD_CONFIG_t;
+
 /* Exported defines ----------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-void TCD_Init(void);
+int32_t  TCD_Init(const TCD_CONFIG_t *config);
 uint32_t TCD_GetNumOfSpectrumsAcquired(void);
 
 #ifdef __cplusplus
