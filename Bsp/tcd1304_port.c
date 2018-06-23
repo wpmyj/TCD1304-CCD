@@ -360,6 +360,7 @@ int32_t TCD_PORT_InitADC(void)
     
     /* Peripheral clock enable */
     __HAL_RCC_ADC3_CLK_ENABLE();
+    __HAL_RCC_DMA2_CLK_ENABLE();
     
     /* ADC input pin is connected to PF6 */
     GPIO_InitStruct.Pin = GPIO_PIN_6;
@@ -385,6 +386,10 @@ int32_t TCD_PORT_InitADC(void)
     }
 
     __HAL_LINKDMA( &hadc3, DMA_Handle, hdma_adc3 );
+    
+    /* DMA2_Stream0_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority( DMA2_Stream0_IRQn, DMA_ADC_INTERRUPT_LEVEL, 0 );
+    HAL_NVIC_EnableIRQ( DMA2_Stream0_IRQn );
     
     /**
      * Configure the global features of the ADC

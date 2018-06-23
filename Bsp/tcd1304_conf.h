@@ -82,6 +82,7 @@ extern "C"
  */
 #define TIM_ICG_INTERRUPT_LEVEL             (15U)
 
+#define DMA_ADC_INTERRUPT_LEVEL             (15U)
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
