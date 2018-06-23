@@ -63,7 +63,7 @@ int32_t TCD_Init(const TCD_CONFIG_t *config)
     {
         return -1;
     }
-
+    
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
 
@@ -88,11 +88,11 @@ int32_t TCD_Init(const TCD_CONFIG_t *config)
  *
  * This function is called from the portable layer in interrupt context.
  ******************************************************************************/
-void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
+void TCD_ReadCompletedCallback(void)
 {
     TCD_pcb.totalSpectrumsAcquired++;
-}
-
+    }
+    
 /*******************************************************************************
  * @brief
  * @param

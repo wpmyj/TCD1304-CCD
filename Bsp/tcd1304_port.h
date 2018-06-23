@@ -59,7 +59,7 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer);
  * The tcd1304.c implements what should be done in this function.
  *
  */
-void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf);
+void TCD_ReadCompletedCallback(void);
 
 #ifdef __cplusplus
 }

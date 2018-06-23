@@ -40,8 +40,6 @@ extern TIM_HandleTypeDef htim14;
 extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
-static uint16_t *pSensorData;
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -405,7 +403,6 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
     {
         return -1;
     }
-    pSensorData = dataBuffer;
 
     return (uint32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
 }
@@ -439,7 +436,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
     TCD_PORT_DISABLE_ADC_TRIGGER();
 
-    TCD_ReadCompletedCallback( pSensorData );
+    TCD_ReadCompletedCallback();
 
     HAL_DMA_IRQHandler( &hdma_adc3 );
 }
