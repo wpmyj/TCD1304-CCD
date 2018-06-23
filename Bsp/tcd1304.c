@@ -27,7 +27,8 @@
 typedef struct
 {
     uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
-    uint32_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
+    uint16_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
+    uint32_t SensorDataAccu[ CFG_CCD_NUM_PIXELS ];
     uint32_t specIndex;
     uint64_t totalSpectrumsAcquired;
 } TCD_PCB_t;
@@ -83,17 +84,40 @@ int32_t TCD_Init(TCD_CONFIG_t *config)
 }
 
 /*******************************************************************************
- * @brief
- * @param
+ * @brief   Handle sensor data when the ADC+DMA has samples all pixels.
+ * @param   pSensorDataBuf, address to the RAM locating
  * @retval
+ * This function is called from the ADC DMA transfer complete interrupt handler.
+ * The DMA is configured to circular (ring buffer) mode. The interrupt request
+ * flag is generated just before the tranfer counter is re-set to the programmed
+ * value.
  *
- * This function is called from the portable layer in interrupt context.
+ * NOTE: This function is called from the portable layer in interrupt context.
  ******************************************************************************/
 void TCD_ReadCompletedCallback(void)
 {
     TCD_pcb.totalSpectrumsAcquired++;
+    TCD_pcb.specIndex++;
+    
+    /* Accumulate the spectrum data vector */
+    for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
+    {
+        TCD_pcb.SensorDataAccu[ i ] += TCD_pcb.SensorData[ i ];
     }
     
+    /* Calculate average data vector */
+    if ( TCD_pcb.specIndex == (TCD_config->avg - 1U) )
+    {
+        for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
+        {
+            TCD_pcb.SensorDataAvg[ i ] = TCD_pcb.SensorDataAccu[ i ] / TCD_config->avg;
+            TCD_pcb.SensorDataAccu[ i ] = 0U;
+        }
+        
+        TCD_pcb.specIndex = 0U;
+    }
+}
+
 /*******************************************************************************
  * @brief
  * @param
