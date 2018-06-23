@@ -57,6 +57,14 @@ DMA_HandleTypeDef hdma_usart1_rx;
 static char strBuf[ 128 ];
 
 /* Private variables ---------------------------------------------------------*/
+static TCD_CONFIG_t sensor_config = 
+{
+    .avg = 100,
+    .f_master = 2000000,
+    .f_icg = 10,
+    .t_int_us = 2000,
+};
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -81,7 +89,8 @@ int main(void)
     MX_GPIO_Init();
     MX_DMA_Init();
     MX_USART1_UART_Init();
-    TCD_Init();
+    
+    TCD_Init( &sensor_config );
 
     while ( 1 )
     {
