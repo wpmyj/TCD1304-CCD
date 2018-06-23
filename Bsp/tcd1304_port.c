@@ -60,7 +60,7 @@ void TCD_PORT_Run(void)
 {
     TCD_PORT_ICG_SET_DELAY( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
     TCD_PORT_SH_SET_DELAY( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
-    
+
     HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );      /* ICG */
     HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );        /* SH */
     HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );        /* fM */
@@ -337,8 +337,11 @@ void TCD_PORT_ConfigADCTrigger(void)
         _Error_Handler( __FILE__, __LINE__ );
     }
 
-    HAL_TIM_PWM_Start( &htim8, TIM_CHANNEL_1 );
-    htim8.Instance->CR1 &= (~TIM_CR1_CEN);
+    /* Enable the Capture compare channel */
+    TIM_CCxChannelCmd( htim8.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE );
+
+    /* Enable the main output */
+    __HAL_TIM_MOE_ENABLE( &htim8 );
 }
 
 /*******************************************************************************
