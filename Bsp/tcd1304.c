@@ -24,6 +24,23 @@
 #include "tcd1304.h"
 
 /* Private typedef -----------------------------------------------------------*/
+typedef struct
+{
+    uint32_t avg;
+    uint32_t f_master;
+    uint32_t f_icg;
+    uint32_t t_int_us;
+} TCD_CONFIG_t;
+
+typedef struct
+{
+    uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
+    uint32_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
+    uint32_t specIndex;
+    uint64_t totalSpectrumsAcquired;
+    TCD_CONFIG_t config;
+} TCD_PCB_t;
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
