@@ -188,6 +188,10 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
         _Error_Handler( __FILE__, __LINE__ );
     }
 
+    /* Set TIM2 interrupt level and enable interrupt for TIM2 */
+    HAL_NVIC_SetPriority(TIM2_IRQn, TIM_ICG_INTERRUPT_LEVEL, 0);
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    
     return err;
 }
 

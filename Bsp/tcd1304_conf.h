@@ -74,6 +74,14 @@ extern "C"
 #define TCD_PORT_ICG_SET_DELAY(cnt)         TIM2->CNT = TIM2->ARR - cnt
 #define TCD_PORT_SH_SET_DELAY(cnt)          TIM14->CNT = TIM14->ARR - cnt
 
+
+/** 
+ * In STM32 MCU 4 interrupt priority bits are implemented. This means that 
+ * the lowest (highest value) interrupt priority is 15 (0x0F).
+ * We set the TIM_ICG_INTERRUPT_LEVEL to default value = 15.
+ */
+#define TIM_ICG_INTERRUPT_LEVEL             (15U)
+
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
