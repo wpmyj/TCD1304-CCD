@@ -27,7 +27,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
+static uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
+static uint32_t TDC_SpectrumsAcquired = 0U;
 
 /* Private function prototypes -----------------------------------------------*/
 static void TCD_FM_Init(void);
@@ -60,6 +61,29 @@ void TCD_Init(void)
 
     /* Start to generate ICG and SH pulses */
     TCD_PORT_Run();
+}
+
+/*******************************************************************************
+ * @brief
+ * @param
+ * @retval
+ *
+ * This function is called from the portable layer in interrupt context.
+ ******************************************************************************/
+void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
+{
+    TDC_SpectrumsAcquired++;
+}
+
+/*******************************************************************************
+ * @brief
+ * @param
+ * @retval
+ *
+ ******************************************************************************/
+uint32_t TCD_GetNumOfSpectrumsAcquired(void)
+{
+    return TDC_SpectrumsAcquired;
 }
 
 /**

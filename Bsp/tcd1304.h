@@ -37,6 +37,7 @@ extern "C"
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void TCD_Init(void);
+uint32_t TCD_GetNumOfSpectrumsAcquired(void);
 
 #ifdef __cplusplus
 }
