@@ -54,7 +54,6 @@ UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
 
-uint32_t TDC_SpectrumsAcquired = 0U;
 static char strBuf[ 128 ];
 
 /* Private variables ---------------------------------------------------------*/
@@ -87,15 +86,9 @@ int main(void)
     while ( 1 )
     {
         HAL_Delay( 1000 );
-        sprintf( strBuf, "# of Spectrums = %d\r\n", TDC_SpectrumsAcquired );
+        sprintf( strBuf, "# of Spectrums = %d\r\n", TCD_GetNumOfSpectrumsAcquired() );
         HAL_UART_Transmit( &huart1, (uint8_t *) strBuf, strlen( strBuf ), 1000U );
     }
-}
-
-/* This function is called from the portable layer in interupt context. */
-void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
-{
-    TDC_SpectrumsAcquired++;
 }
 
 /**
