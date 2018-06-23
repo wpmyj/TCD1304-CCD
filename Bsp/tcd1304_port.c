@@ -437,7 +437,7 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
         return -1;
     }
 
-    return (uint32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
+    return (int32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
 }
 
 /**
