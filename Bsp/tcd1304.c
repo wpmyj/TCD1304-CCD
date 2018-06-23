@@ -38,14 +38,13 @@ typedef struct
     uint32_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
     uint32_t specIndex;
     uint64_t totalSpectrumsAcquired;
-    TCD_CONFIG_t config;
 } TCD_PCB_t;
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static uint16_t TCD_SensorData[ CFG_CCD_NUM_PIXELS ];
-static uint32_t TDC_SpectrumsAcquired = 0U;
+static TCD_CONFIG_t TCD_config;
+static TCD_PCB_t TCD_pcb;
 
 /* Private function prototypes -----------------------------------------------*/
 static void TCD_FM_Init(void);
@@ -68,6 +67,9 @@ static void TCD_ADC_Init(void);
  ******************************************************************************/
 void TCD_Init(void)
 {
+    TCD_pcb.specIndex = 0U;
+    TCD_pcb.totalSpectrumsAcquired = 0U;
+
     /* Configure and start the ADC + DMA */
     TCD_ADC_Init();
 
@@ -89,7 +91,7 @@ void TCD_Init(void)
  ******************************************************************************/
 void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
 {
-    TDC_SpectrumsAcquired++;
+    TCD_pcb.totalSpectrumsAcquired++;
 }
 
 /*******************************************************************************
@@ -100,7 +102,7 @@ void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
  ******************************************************************************/
 uint32_t TCD_GetNumOfSpectrumsAcquired(void)
 {
-    return TDC_SpectrumsAcquired;
+    return TCD_pcb.totalSpectrumsAcquired;
 }
 
 /**
@@ -159,7 +161,7 @@ static void TCD_ADC_Init(void)
      * Start the DMA to move data from ADC to RAM.
      * From now on the AD conversion is controlled by hardware.
      */
-    TCD_PORT_StartADC( TCD_SensorData );
+    TCD_PORT_StartADC( TCD_pcb.SensorData );
 }
 
 /****************************** END OF FILE ***********************************/
