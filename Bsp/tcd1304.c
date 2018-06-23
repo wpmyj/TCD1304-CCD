@@ -72,7 +72,7 @@ int32_t TCD_Init(TCD_CONFIG_t *config)
     /* Configure and start the ADC + DMA */
     TCD_ADC_Init();
 
-    /* Configure and start the timers */
+    /* Configure the timers */
     TCD_FM_Init();
     TCD_ICG_Init();
     TCD_SH_Init();
@@ -136,35 +136,59 @@ uint32_t TCD_GetNumOfSpectrumsAcquired(void)
  */
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (2 MHz)
+ * @Brief   Generate the Master Clock for the CCD sensor
  * @param   None
  * @retval  None
+ * Check that the master clock is within the limits of the sensor; 0.4 - 4 MHz.
  ******************************************************************************/
 static void TCD_FM_Init(void)
 {
-    TCD_PORT_ConfigMasterClock( CFG_FM_FREQUENCY_HZ );
+    if ( (TCD_config->f_master < 4000000U) && (TCD_config->f_master > 400000U) )
+    {
+        TCD_PORT_ConfigMasterClock( TCD_config->f_master );
+    }
+    else
+    {
+        TCD_PORT_ConfigMasterClock( CFG_FM_FREQUENCY_HZ );
+    }
 }
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (TIM2)
+ * @Brief   Generate the ICG pulses
  * @param   None
  * @retval  None
- *
+ * Check that the ICG frequency is within the limits. 0 - 100 Hz
  ******************************************************************************/
 static void TCD_ICG_Init(void)
 {
-    TCD_PORT_ConfigICGClock( CFG_ICG_DEFAULT_FREQ_HZ );
+    if ( (TCD_config->f_icg > 0U) && (TCD_config->f_icg <= 100U) )
+    {
+        TCD_PORT_ConfigICGClock( TCD_config->f_icg );
+    }
+    else
+    {
+        TCD_PORT_ConfigICGClock( CFG_ICG_DEFAULT_FREQ_HZ );
+    }
 }
 
 /*******************************************************************************
- * @Brief   Generate the Master Clock to run at CFG_FM_FREQUENCY_HZ (TIM14)
+ * @Brief   Generate the electronic shutter (SH) pulses
  * @param   None
  * @retval  None
- *
+ * Check that the SH period is within the limits. >10 us and < ICG period.
  ******************************************************************************/
 static void TCD_SH_Init(void)
 {
-    TCD_PORT_ConfigSHClock( CFG_SH_DEFAULT_PERIOD_US );
+    uint32_t icg_period = 1000000U / TCD_config->f_icg;
+    
+    if ( (TCD_config->t_int_us > 10U) && (TCD_config->t_int_us < icg_period) )
+    {
+        TCD_PORT_ConfigSHClock( TCD_config->t_int_us );
+    }
+    else
+    {
+        TCD_PORT_ConfigSHClock( CFG_SH_DEFAULT_PERIOD_US );
+    }
 }
 
 
