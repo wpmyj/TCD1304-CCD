@@ -410,11 +410,6 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
     return (uint32_t ) HAL_ADC_Start_DMA( &hadc3, (uint32_t *) dataBuffer, CFG_CCD_NUM_PIXELS );
 }
 
-__weak void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf)
-{
-    /* The user implements its own functionality */
-}
-
 /**
  *******************************************************************************
  *                        PRIVATE IMPLEMENTATION SECTION
@@ -444,7 +439,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
     TCD_PORT_DISABLE_ADC_TRIGGER();
 
-    TCD_PORT_CCD_ReadCompletedCallback( pSensorData );
+    TCD_ReadCompletedCallback( pSensorData );
 
     HAL_DMA_IRQHandler( &hdma_adc3 );
 }

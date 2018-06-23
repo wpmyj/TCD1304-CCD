@@ -53,12 +53,13 @@ int32_t TCD_PORT_InitADC(void);
 void    TCD_PORT_ConfigADCTrigger(void);
 int32_t TCD_PORT_StartADC(uint16_t *dataBuffer);
 
-/** 
- * This function is implemented with the keyword __weak.
- * The user implements its own function. The linker will place the correct
- * implementation in the binary output.
+/**
+ * This function is called when a complete CCD sensor readout is finished.
+ * This function is called in the interrupt handler of the portable layer.
+ * The tcd1304.c implements what should be done in this function.
+ *
  */
-void TCD_PORT_CCD_ReadCompletedCallback(uint16_t *pSensorDataBuf);
+void TCD_ReadCompletedCallback(uint16_t *pSensorDataBuf);
 
 #ifdef __cplusplus
 }
