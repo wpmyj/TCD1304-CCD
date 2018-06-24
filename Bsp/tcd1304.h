@@ -40,6 +40,21 @@ typedef struct
     uint32_t t_int_us;
 } TCD_CONFIG_t;
 
+typedef enum
+{
+    TCD_OK = 0,
+    TCD_ERR_INIT,
+    TCD_ERR_FM_INIT,
+    TCD_ERR_ICG_INIT,
+    TCD_ERR_SH_INIT,
+    /* Error codes for parameter inputs */
+    TCD_ERR_PARAM_OUT_OF_RANGE,
+    TCD_ERR_NULL_POINTER,
+    /* Serious errors */
+    TCD_ERR_NOT_INITIALIZED,
+    TCD_ERR_CRITICAL
+} TCD_ERR_t;
+
 /* Exported defines ----------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
