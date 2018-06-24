@@ -79,6 +79,7 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM13_CLK_ENABLE();
+    __HAL_RCC_GPIOF_CLK_ENABLE();
 
     /* TIM13 GPIO Configuration. PF8------> TIM13_CH1 */
     GPIO_InitStruct.Pin = TCD_fM_Pin;
@@ -137,6 +138,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM2_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
 
     /* TIM2 GPIO Configuration. PA0------> TIM2_CH1 */
     GPIO_InitStruct.Pin = TCD_ICG_Pin;
@@ -191,7 +193,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
     /* Set TIM2 interrupt level and enable interrupt for TIM2 */
     HAL_NVIC_SetPriority(TIM2_IRQn, TIM_ICG_INTERRUPT_LEVEL, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
-    
+
     return err;
 }
 
@@ -212,6 +214,7 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t intTime_us)
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM14_CLK_ENABLE();
+    __HAL_RCC_GPIOF_CLK_ENABLE();
 
     /* TIM14 GPIO Configuration. PF9------> TIM14_CH1 */
     GPIO_InitStruct.Pin = GPIO_PIN_9;
@@ -267,6 +270,7 @@ void TCD_PORT_ConfigADCTrigger(void)
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM8_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 
     /* TIM8 GPIO Configuration. PC6------> TIM8_CH1 */
     GPIO_InitStruct.Pin = ADC_TRIG_Pin;
@@ -357,17 +361,18 @@ int32_t TCD_PORT_InitADC(void)
     ADC_ChannelConfTypeDef sConfig;
     GPIO_InitTypeDef GPIO_InitStruct;
     int32_t err = 0;
-    
+
     /* Peripheral clock enable */
     __HAL_RCC_ADC3_CLK_ENABLE();
     __HAL_RCC_DMA2_CLK_ENABLE();
-    
+    __HAL_RCC_GPIOF_CLK_ENABLE();
+
     /* ADC input pin is connected to PF6 */
     GPIO_InitStruct.Pin = GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init( GPIOF, &GPIO_InitStruct );
-    
+
     /* ADC3 DMA Init */
     hdma_adc3.Instance = DMA2_Stream0;
     hdma_adc3.Init.Channel = DMA_CHANNEL_2;
@@ -379,18 +384,18 @@ int32_t TCD_PORT_InitADC(void)
     hdma_adc3.Init.Mode = DMA_CIRCULAR;
     hdma_adc3.Init.Priority = DMA_PRIORITY_LOW;
     hdma_adc3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    
+
     if ( HAL_DMA_Init( &hdma_adc3 ) != HAL_OK )
     {
       _Error_Handler( __FILE__, __LINE__ );
     }
 
     __HAL_LINKDMA( &hadc3, DMA_Handle, hdma_adc3 );
-    
+
     /* DMA2_Stream0_IRQn interrupt configuration */
     HAL_NVIC_SetPriority( DMA2_Stream0_IRQn, DMA_ADC_INTERRUPT_LEVEL, 0 );
     HAL_NVIC_EnableIRQ( DMA2_Stream0_IRQn );
-    
+
     /**
      * Configure the global features of the ADC
      * (Clock, Resolution, Data Alignment and number of conversion)
