@@ -82,12 +82,12 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     __HAL_RCC_GPIOF_CLK_ENABLE();
 
     /* TIM13 GPIO Configuration. PF8------> TIM13_CH1 */
-    GPIO_InitStruct.Pin = TCD_fM_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF9_TIM13;
-    HAL_GPIO_Init( TCD_fM_GPIO_Port, &GPIO_InitStruct );
+    HAL_GPIO_Init( GPIOF, &GPIO_InitStruct );
 
     htim13.Instance = TIM13;
     htim13.Init.Prescaler = 0;
@@ -141,12 +141,12 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
     /* TIM2 GPIO Configuration. PA0------> TIM2_CH1 */
-    GPIO_InitStruct.Pin = TCD_ICG_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_0;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
-    HAL_GPIO_Init(TCD_ICG_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     htim2.Instance = TIM2;
     htim2.Init.Prescaler = prescaler;
@@ -273,12 +273,12 @@ void TCD_PORT_ConfigADCTrigger(void)
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
     /* TIM8 GPIO Configuration. PC6------> TIM8_CH1 */
-    GPIO_InitStruct.Pin = ADC_TRIG_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF3_TIM8;
-    HAL_GPIO_Init( ADC_TRIG_GPIO_Port, &GPIO_InitStruct );
+    HAL_GPIO_Init( GPIOC, &GPIO_InitStruct );
 
     htim8.Instance = TIM8;
     htim8.Init.Prescaler = 0;
