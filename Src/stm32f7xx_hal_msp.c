@@ -95,7 +95,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     __HAL_RCC_USART1_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
-  
+    __HAL_RCC_DMA2_CLK_ENABLE();
+      
     /**USART1 GPIO Configuration    
     PB7     ------> USART1_RX
     PA9     ------> USART1_TX 
