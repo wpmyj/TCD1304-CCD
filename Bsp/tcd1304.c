@@ -41,10 +41,10 @@ static TCD_CONFIG_t *TCD_config;
 static TCD_PCB_t TCD_pcb;
 
 /* Private function prototypes -----------------------------------------------*/
-static void TCD_FM_Init(void);
-static void TCD_ICG_Init(void);
-static void TCD_SH_Init(void);
-static void TCD_ADC_Init(void);
+static TCD_ERR_t TCD_FM_Init(void);
+static TCD_ERR_t TCD_ICG_Init(void);
+static TCD_ERR_t TCD_SH_Init(void);
+static TCD_ERR_t TCD_ADC_Init(void);
 
 /* External functions --------------------------------------------------------*/
 
@@ -161,7 +161,7 @@ uint64_t TCD_GetNumOfSpectrumsAcquired(void)
  * @retval  None
  * Check that the master clock is within the limits of the sensor; 0.4 - 4 MHz.
  ******************************************************************************/
-static void TCD_FM_Init(void)
+static TCD_ERR_t TCD_FM_Init(void)
 {
     if ( (TCD_config->f_master < 4000000U) && (TCD_config->f_master > 400000U) )
     {
@@ -179,7 +179,7 @@ static void TCD_FM_Init(void)
  * @retval  None
  * Check that the ICG frequency is within the limits. 0 - 100 Hz
  ******************************************************************************/
-static void TCD_ICG_Init(void)
+static TCD_ERR_t TCD_ICG_Init(void)
 {
     if ( (TCD_config->f_icg > 0U) && (TCD_config->f_icg <= 100U) )
     {
@@ -197,7 +197,7 @@ static void TCD_ICG_Init(void)
  * @retval  None
  * Check that the SH period is within the limits. >10 us and < ICG period.
  ******************************************************************************/
-static void TCD_SH_Init(void)
+static TCD_ERR_t TCD_SH_Init(void)
 {
     uint32_t icg_period = 1000000U / TCD_config->f_icg;
 
@@ -217,7 +217,7 @@ static void TCD_SH_Init(void)
  * @param   None
  * @retval  None
  ******************************************************************************/
-static void TCD_ADC_Init(void)
+static TCD_ERR_t TCD_ADC_Init(void)
 {
     /* Initialize the ADC hardware and DMA */
     TCD_PORT_InitADC();
