@@ -93,6 +93,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
   /* USER CODE END USART1_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
   
     /**USART1 GPIO Configuration    
     PB7     ------> USART1_RX
@@ -149,6 +151,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 
     __HAL_LINKDMA(huart,hdmarx,hdma_usart1_rx);
 
+    /* DMA interrupt init */
+    /* DMA2_Stream2_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority( DMA2_Stream2_IRQn, 0, 0 );
+    HAL_NVIC_EnableIRQ( DMA2_Stream2_IRQn );
+    
+    /* DMA2_Stream7_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority( DMA2_Stream7_IRQn, 0, 0 );
+    HAL_NVIC_EnableIRQ( DMA2_Stream7_IRQn );
+    
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
