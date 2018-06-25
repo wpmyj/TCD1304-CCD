@@ -43,15 +43,27 @@ typedef struct
 typedef enum
 {
     TCD_OK = 0,
+    
+    /* Warnings. Wrong input parameters. Use default values and return these warnings */
+    TCD_WARN_FM,
+    TCD_WARN_ICG,
+    TCD_WARN_SH,
+    TCD_WARN_ADC,
+
+    /* Error codes for parameter inputs */
+    TCD_ERR_PARAM_OUT_OF_RANGE,
+    TCD_ERR_NULL_POINTER,
+    
+    /* Error during initialization */
     TCD_ERR_INIT,
     TCD_ERR_FM_INIT,
     TCD_ERR_ICG_INIT,
     TCD_ERR_SH_INIT,
-    /* Error codes for parameter inputs */
-    TCD_ERR_PARAM_OUT_OF_RANGE,
-    TCD_ERR_NULL_POINTER,
+    TCD_ERR_ADC_INIT,
+    
     /* Serious errors */
     TCD_ERR_NOT_INITIALIZED,
+    TCD_ERR_ADC_NOT_STARTED,
     TCD_ERR_CRITICAL
 } TCD_ERR_t;
 
