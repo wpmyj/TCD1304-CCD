@@ -68,10 +68,6 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
         return TCD_ERR_NULL_POINTER;
     }
 
-    TCD_config = config;
-    TCD_pcb.specIndex = 0U;
-    TCD_pcb.totalSpectrumsAcquired = 0U;
-
     /* Configure and start the ADC + DMA */
     err = TCD_ADC_Init();
     if ( err != TCD_OK )
@@ -79,23 +75,30 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
         return err;
     }
 
-    /* Configure the timers */
+    /* Configure the master clock timer */
     err = TCD_FM_Init();
     if ( err != TCD_OK )
     {
         return err;
     }
+
+    /* Configure the ICG pulse timer */
     err = TCD_ICG_Init();
     if ( err != TCD_OK )
     {
         return err;
     }
+
+    /* Configure the electronic shutter timer */
     err = TCD_SH_Init();
     if ( err != TCD_OK )
     {
         return err;
     }
 
+    TCD_config = config;
+    TCD_pcb.specIndex = 0U;
+    TCD_pcb.totalSpectrumsAcquired = 0U;
     TCD_pcb.readyToRun = 1U;
 
     return err;
