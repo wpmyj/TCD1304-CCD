@@ -59,10 +59,10 @@ static char strBuf[ 128 ];
 /* Private variables ---------------------------------------------------------*/
 static TCD_CONFIG_t sensor_config = 
 {
-    .avg = 100,
+    .avg = 10,
     .f_master = 2000000,
     .f_icg = 10,
-    .t_int_us = 2000,
+    .t_int_us = 100,
 };
 
 /* Private function prototypes -----------------------------------------------*/
