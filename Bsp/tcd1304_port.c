@@ -78,7 +78,7 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     TIM_OC_InitTypeDef sConfigOC;
     GPIO_InitTypeDef GPIO_InitStruct;
     int32_t err = 0;
-    uint32_t period = (HAL_RCC_GetSysClockFreq()) / freq - 1U;
+    uint32_t period = (HAL_RCC_GetSysClockFreq() / 2U) / freq - 1U;
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM13_CLK_ENABLE();
