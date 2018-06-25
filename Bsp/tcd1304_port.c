@@ -62,9 +62,9 @@ void TCD_PORT_Run(void)
     TCD_PORT_ICG_SetDelay( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
     TCD_PORT_SH_SetDelay( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
 
-    HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );      /* ICG */
-    HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );        /* SH */
-    HAL_TIM_PWM_Start( &htim13, TIM_CHANNEL_1 );        /* fM */
+    __HAL_TIM_ENABLE( &htim2 );         /* ICG TIMER */
+    __HAL_TIM_ENABLE( &htim14 );        /* SH TIMER */
+    __HAL_TIM_ENABLE( &htim13 );        /* fM TIMER */
 }
 
 /*******************************************************************************
@@ -117,6 +117,18 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     if ( HAL_TIM_PWM_ConfigChannel( &htim13, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    /* Check the parameters */
+    assert_param(IS_TIM_CCX_INSTANCE(htim13.Instance, TIM_CHANNEL_1));
+
+    /* Enable the Capture compare channel */
+    TIM_CCxChannelCmd(htim13.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
+
+    if(IS_TIM_ADVANCED_INSTANCE(htim13.Instance) != RESET)
+    {
+      /* Enable the main output */
+      __HAL_TIM_MOE_ENABLE(&htim13);
     }
 
     return err;
@@ -197,6 +209,21 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
     HAL_NVIC_SetPriority(TIM2_IRQn, TIM_ICG_INTERRUPT_LEVEL, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
+    /* Check the parameters */
+    assert_param(IS_TIM_CCX_INSTANCE(htim2.Instance, TIM_CHANNEL_1));
+
+    /* Enable the Capture compare channel */
+    TIM_CCxChannelCmd(htim2.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
+
+    if(IS_TIM_ADVANCED_INSTANCE(htim2.Instance) != RESET)
+    {
+      /* Enable the main output */
+      __HAL_TIM_MOE_ENABLE(&htim2);
+    }
+
+    /* Enable the TIM Capture/Compare 1 interrupt */
+    __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_CC1);
+
     return err;
 }
 
@@ -251,6 +278,18 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t intTime_us)
     if ( HAL_TIM_PWM_ConfigChannel( &htim14, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
+    }
+
+    /* Check the parameters */
+    assert_param(IS_TIM_CCX_INSTANCE(htim13.Instance, TIM_CHANNEL_1));
+
+    /* Enable the Capture compare channel */
+    TIM_CCxChannelCmd(htim14.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
+
+    if(IS_TIM_ADVANCED_INSTANCE(htim14.Instance) != RESET)
+    {
+      /* Enable the main output */
+      __HAL_TIM_MOE_ENABLE(&htim14);
     }
 
     return err;
