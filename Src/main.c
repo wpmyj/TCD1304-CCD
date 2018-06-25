@@ -87,7 +87,10 @@ int main(void)
     MX_USART1_UART_Init();
     
     /* Initialize and start the TCD1304 CCD sensor */
-    TCD_Init( &sensor_config );
+    if ( TCD_Init( &sensor_config ) != TCD_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
     if ( TCD_Start() != TCD_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
