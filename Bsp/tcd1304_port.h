@@ -50,13 +50,6 @@ extern "C"
 #define TCD_ICG_TIMER                       (TIM2)
 #define TCD_SH_TIMER                        (TIM14)
 #define TCD_ADC_TRIG_TIMER                  (TIM8)
- 
-/* Macro calls */
-#define TCD_PORT_ENABLE_ADC_TRIGGER()       TCD_ADC_TRIG_TIMER->CR1 = (TIM_CR1_CEN)
-#define TCD_PORT_DISABLE_ADC_TRIGGER()      TCD_ADC_TRIG_TIMER->CR1 &= (~TIM_CR1_CEN)
-
-#define TCD_PORT_ICG_SET_DELAY(cnt)         TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt
-#define TCD_PORT_SH_SET_DELAY(cnt)          TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt
 
 /**
  *******************************************************************************

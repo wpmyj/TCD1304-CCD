@@ -41,7 +41,10 @@ extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
 /* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
+static void TCD_PORT_EnableADCTrigger(void);
+static void TCD_PORT_DisableADCTrigger(void);
+static void TCD_PORT_ICG_SetDelay(uint32_t cnt);
+static void TCD_PORT_SH_SetDelay(uint32_t cnt);
 
 /**
  *******************************************************************************
@@ -56,8 +59,8 @@ extern DMA_HandleTypeDef hdma_adc3;
  ******************************************************************************/
 void TCD_PORT_Run(void)
 {
-    TCD_PORT_ICG_SET_DELAY( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
-    TCD_PORT_SH_SET_DELAY( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
+    TCD_PORT_ICG_SetDelay( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
+    TCD_PORT_SH_SetDelay( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
 
     HAL_TIM_PWM_Start_IT( &htim2, TIM_CHANNEL_1 );      /* ICG */
     HAL_TIM_PWM_Start( &htim14, TIM_CHANNEL_1 );        /* SH */
@@ -457,6 +460,54 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
  */
 
 /**
+ * The compiler is smart to inline these functions calls into where it is called
+ * to remove function call overheads.
+ */
+/*******************************************************************************
+ * @brief   Enable the timer that generates ADC trigger signal
+ * @param   None
+ * @retval  None
+ *
+ ******************************************************************************/
+static void TCD_PORT_EnableADCTrigger(void)
+{
+    TCD_ADC_TRIG_TIMER->CR1 = TIM_CR1_CEN;
+}
+
+/*******************************************************************************
+ * @brief   Disable the timer that generates ADC trigger signal
+ * @param   None
+ * @retval  None
+ *
+ ******************************************************************************/
+static void TCD_PORT_DisableADCTrigger(void)
+{
+    TCD_ADC_TRIG_TIMER->CR1 &= ~TIM_CR1_CEN;
+}
+
+/*******************************************************************************
+ * @brief   Set a delay to the ICG pulse with the given timer counter value
+ * @param   cnt, uint32_t. Timer counter value to delay
+ * @retval  None
+ *
+ ******************************************************************************/
+static void TCD_PORT_ICG_SetDelay(uint32_t cnt)
+{
+    TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt;
+}
+
+/*******************************************************************************
+ * @brief   Set a delay to the SH pulse with the given timer counter value
+ * @param   cnt, uint32_t. Timer counter value to delay
+ * @retval  None
+ *
+ ******************************************************************************/
+static void TCD_PORT_SH_SetDelay(uint32_t cnt)
+{
+    TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt;
+}
+
+/**
  *******************************************************************************
  *                         INTERRUPT HANDLERS
  *******************************************************************************
@@ -467,7 +518,7 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
  */
 void TIM2_IRQHandler(void)
 {
-    TCD_PORT_ENABLE_ADC_TRIGGER();
+    TCD_PORT_EnableADCTrigger();
 
     HAL_TIM_IRQHandler( &htim2 );
 }
@@ -477,7 +528,7 @@ void TIM2_IRQHandler(void)
  */
 void DMA2_Stream0_IRQHandler(void)
 {
-    TCD_PORT_DISABLE_ADC_TRIGGER();
+    TCD_PORT_DisableADCTrigger();
 
     TCD_ReadCompletedCallback();
 
