@@ -55,6 +55,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 static char strBuf[ 128 ];
+static uint8_t UART_RxBuf[12];
 
 /* Private variables ---------------------------------------------------------*/
 static TCD_CONFIG_t sensor_config = 
@@ -85,6 +86,10 @@ int main(void)
 
     /* Initialize all configured peripherals */
     MX_USART1_UART_Init();
+    if (HAL_UART_Receive_DMA(&huart1, UART_RxBuf, sizeof(UART_RxBuf)) != HAL_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
     
     /* Initialize and start the TCD1304 CCD sensor */
     if ( TCD_Init( &sensor_config ) != TCD_OK )
