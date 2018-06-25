@@ -73,6 +73,9 @@ typedef enum
 /* Exported functions --------------------------------------------------------*/
 TCD_ERR_t TCD_Init(TCD_CONFIG_t *config);
 TCD_ERR_t TCD_Start(void);
+TCD_ERR_t TCD_Stop(void);
+
+uint16_t* TCD_GetSensorDataBuffer(void);
 uint64_t TCD_GetNumOfSpectrumsAcquired(void);
 
 #ifdef __cplusplus
