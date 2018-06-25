@@ -59,11 +59,11 @@ static void TCD_ADC_Init(void);
  * @param
  * @retval
  ******************************************************************************/
-int32_t TCD_Init(TCD_CONFIG_t *config)
+TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
 {
     if ( config == NULL )
     {
-        return -1;
+        return TCD_ERR_NULL_POINTER;
     }
 
     TCD_config = config;
@@ -80,7 +80,7 @@ int32_t TCD_Init(TCD_CONFIG_t *config)
 
     TCD_pcb.readyToRun = 1U;
 
-    return 0;
+    return TCD_OK;
 }
 
 /*******************************************************************************
