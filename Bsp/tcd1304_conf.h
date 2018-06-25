@@ -59,7 +59,7 @@ extern "C"
  * Minimum SH pulse width is >= 2 us.
  */
 #define CFG_SH_DEFAULT_PERIOD_US            (1000U)
-#define CFG_SH_DEFAULT_PULSE_US             (2U)
+#define CFG_SH_DEFAULT_PULSE_US             (3U)
 #define CFG_SH_DEFAULT_PULSE_DELAY_CNT      (1U)
 
 /**
@@ -68,7 +68,7 @@ extern "C"
  */
 #define CFG_ICG_DEFAULT_PERIOD_MS           (100U)
 #define CFG_ICG_DEFAULT_FREQ_HZ             (1000U / CFG_ICG_DEFAULT_PERIOD_MS)
-#define CFG_ICG_DEFAULT_PULSE_US            (5U)
+#define CFG_ICG_DEFAULT_PULSE_US            (6U)
 #define CFG_ICG_DEFAULT_PULSE_DELAY_CNT     (0U)
 
 /* Exported macros -----------------------------------------------------------*/
