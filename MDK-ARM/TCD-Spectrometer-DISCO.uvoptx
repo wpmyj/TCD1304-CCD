@@ -153,10 +153,18 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>266</SubType>
-          <ItemText>TCD_SensorData</ItemText>
+          <ItemText>TCD_pcb.SensorDataAvg</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
+      <MemoryWindow2>
+        <Mm>
+          <WinNumber>2</WinNumber>
+          <SubType>266</SubType>
+          <ItemText>TCD_pcb.SensorData</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow2>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
