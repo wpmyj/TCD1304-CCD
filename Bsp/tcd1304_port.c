@@ -532,7 +532,7 @@ static void TCD_PORT_DisableADCTrigger(void)
  ******************************************************************************/
 static void TCD_PORT_ICG_SetDelay(uint32_t cnt)
 {
-    TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt;
+    TCD_ICG_TIMER->CNT = cnt;
 }
 
 /*******************************************************************************
@@ -543,7 +543,7 @@ static void TCD_PORT_ICG_SetDelay(uint32_t cnt)
  ******************************************************************************/
 static void TCD_PORT_SH_SetDelay(uint32_t cnt)
 {
-    TCD_ICG_TIMER->CNT = TCD_ICG_TIMER->ARR - cnt;
+    TCD_ICG_TIMER->CNT = cnt;
 }
 
 /**
