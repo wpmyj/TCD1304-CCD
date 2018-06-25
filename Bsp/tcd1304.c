@@ -67,6 +67,10 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
     {
         return TCD_ERR_NULL_POINTER;
     }
+    else
+    {
+        TCD_config = config;
+    }
 
     /* Configure and start the ADC + DMA */
     err = TCD_ADC_Init();
@@ -96,7 +100,6 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
         return err;
     }
 
-    TCD_config = config;
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
     TCD_pcb.readyToRun = 1U;
