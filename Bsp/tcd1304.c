@@ -234,7 +234,7 @@ static TCD_ERR_t TCD_SH_Init(void)
 
     uint32_t icg_period = 1000000U / TCD_config->f_icg;
 
-    if ( (TCD_config->t_int_us > 10U) && (TCD_config->t_int_us < icg_period) )
+    if ( (TCD_config->t_int_us >= 10U) && (TCD_config->t_int_us < icg_period) )
     {
         TCD_PORT_ConfigSHClock( TCD_config->t_int_us );
     }
