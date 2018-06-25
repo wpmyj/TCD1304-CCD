@@ -110,7 +110,7 @@ void TCD_ReadCompletedCallback(void)
     {
         for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
         {
-            TCD_pcb.SensorDataAvg[ i ] = TCD_pcb.SensorDataAccu[ i ] / TCD_config->avg;
+            TCD_pcb.SensorDataAvg[ i ] = (uint16_t) (TCD_pcb.SensorDataAccu[ i ] / TCD_config->avg);
             TCD_pcb.SensorDataAccu[ i ] = 0U;
         }
         
@@ -124,7 +124,7 @@ void TCD_ReadCompletedCallback(void)
  * @retval
  *
  ******************************************************************************/
-uint32_t TCD_GetNumOfSpectrumsAcquired(void)
+uint64_t TCD_GetNumOfSpectrumsAcquired(void)
 {
     return TCD_pcb.totalSpectrumsAcquired;
 }

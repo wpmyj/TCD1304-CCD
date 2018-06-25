@@ -95,7 +95,7 @@ int main(void)
     while ( 1 )
     {
         HAL_Delay( 1000 );
-        sprintf( strBuf, "# of Spectrums = %d\r\n", TCD_GetNumOfSpectrumsAcquired() );
+        sprintf( strBuf, "# of Spectrums = %llu\r\n", TCD_GetNumOfSpectrumsAcquired() );
         HAL_UART_Transmit( &huart1, (uint8_t *) strBuf, strlen( strBuf ), 1000U );
     }
 }
