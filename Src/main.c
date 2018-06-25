@@ -91,7 +91,11 @@ int main(void)
     MX_USART1_UART_Init();
     
     TCD_Init( &sensor_config );
-
+    if ( TCD_Start() != TCD_OK )
+    {
+        _Error_Handler( __FILE__, __LINE__ );
+    }
+    
     while ( 1 )
     {
         HAL_Delay( 1000 );

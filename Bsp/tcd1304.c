@@ -29,6 +29,7 @@ typedef struct
     uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
     uint16_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
     uint32_t SensorDataAccu[ CFG_CCD_NUM_PIXELS ];
+    uint8_t  readyToRun;
     uint32_t specIndex;
     uint64_t totalSpectrumsAcquired;
 } TCD_PCB_t;
@@ -64,7 +65,7 @@ int32_t TCD_Init(TCD_CONFIG_t *config)
     {
         return -1;
     }
-    
+
     TCD_config = config;
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
@@ -77,10 +78,29 @@ int32_t TCD_Init(TCD_CONFIG_t *config)
     TCD_ICG_Init();
     TCD_SH_Init();
 
-    /* Start to generate ICG and SH pulses */
-    TCD_PORT_Run();
+    TCD_pcb.readyToRun = 1U;
 
     return 0;
+}
+
+/*******************************************************************************
+ * @brief   Start the timers and data acquisition with ADC+DMA
+ * @param   None
+ * @retval  TCD_OK on success or TCD_ERR_t code
+ *
+ ******************************************************************************/
+TCD_ERR_t TCD_Start(void)
+{
+    if ( TCD_pcb.readyToRun == 1U )
+    {
+        /* Start to generate ICG and SH pulses */
+        TCD_PORT_Run();
+        return TCD_OK;
+    }
+    else
+    {
+        return TCD_ERR_NOT_INITIALIZED;
+    }
 }
 
 /*******************************************************************************
@@ -98,13 +118,13 @@ void TCD_ReadCompletedCallback(void)
 {
     TCD_pcb.totalSpectrumsAcquired++;
     TCD_pcb.specIndex++;
-    
+
     /* Accumulate the spectrum data vector */
     for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
     {
         TCD_pcb.SensorDataAccu[ i ] += TCD_pcb.SensorData[ i ];
     }
-    
+
     /* Calculate average data vector */
     if ( TCD_pcb.specIndex == (TCD_config->avg - 1U) )
     {
@@ -113,7 +133,7 @@ void TCD_ReadCompletedCallback(void)
             TCD_pcb.SensorDataAvg[ i ] = (uint16_t) (TCD_pcb.SensorDataAccu[ i ] / TCD_config->avg);
             TCD_pcb.SensorDataAccu[ i ] = 0U;
         }
-        
+
         TCD_pcb.specIndex = 0U;
     }
 }
@@ -180,7 +200,7 @@ static void TCD_ICG_Init(void)
 static void TCD_SH_Init(void)
 {
     uint32_t icg_period = 1000000U / TCD_config->f_icg;
-    
+
     if ( (TCD_config->t_int_us > 10U) && (TCD_config->t_int_us < icg_period) )
     {
         TCD_PORT_ConfigSHClock( TCD_config->t_int_us );

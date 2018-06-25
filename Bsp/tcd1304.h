@@ -60,6 +60,7 @@ typedef enum
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 int32_t  TCD_Init(TCD_CONFIG_t *config);
+TCD_ERR_t TCD_Start(void);
 uint64_t TCD_GetNumOfSpectrumsAcquired(void);
 
 #ifdef __cplusplus
