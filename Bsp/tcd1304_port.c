@@ -513,25 +513,51 @@ static void TCD_PORT_SH_SetDelay(uint32_t cnt)
  *******************************************************************************
  */
 
-/**
- * @brief This function handles TIM5 (ICG PULSE) global interrupt.
- */
-void TIM2_IRQHandler(void)
+/*******************************************************************************
+ * @brief   This function handles ICG PULSE interrupt.
+ * @param   None
+ * @retval  None
+ *
+ * When the ICG TIMER has generated an ICG pulse to start moving out charges
+ * from the CCD, an interrupt request (TIMx_IRQ) is generated.
+ *
+ * This interrupt handler function is to start the ADC+DMA acquisition of
+ * CFG_CCD_NUM_PIXELS ADC samples. This is 3694 for the TCD1304 sensor.
+ * When this acquisition is finished, a new interrupt is generated;
+ * TCD_CCD_ADC_INTERRUPT_HANDLER().
+ *
+ ******************************************************************************/
+void TCD_ICG_TIMER_INTERRUPT_HANDLER(void)
 {
     TCD_PORT_EnableADCTrigger();
 
     HAL_TIM_IRQHandler( &htim2 );
 }
 
-/**
- * @brief This function handles DMA2 stream0 global interrupt.
- */
-void DMA2_Stream0_IRQHandler(void)
+/*******************************************************************************
+ * @brief   This function handles ADC+DMA acquisition complete interrupt.
+ * @param   None
+ * @retval  None
+ *
+ * The ADC+DMA acquisition of CFG_CCD_NUM_PIXELS samples were started in
+ * TCD_ICG_TIMER_INTERRUPT_HANDLER().
+ *
+ * When the DMA transfer has completed an interrupt request (DMAX_StreamX_IRQ)
+ * is generated.
+ * This is the interrupt handler for that request. Following is done:
+ * 1) Disable the ADC trigger signal (TCD_ADC_TRIG_TIMER).
+ * 2) Let the HAL layer handle the DMA interrupt request
+ * 3) Call the user callback function to deal with the acquired ADC samples.
+ *
+ ******************************************************************************/
+void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
 {
     TCD_PORT_DisableADCTrigger();
 
-    TCD_ReadCompletedCallback();
-
     HAL_DMA_IRQHandler( &hdma_adc3 );
+
+    /* Do something with the acquired AD samples in RAM */
+    TCD_ReadCompletedCallback();
 }
+
 /****************************** END OF FILE ***********************************/
