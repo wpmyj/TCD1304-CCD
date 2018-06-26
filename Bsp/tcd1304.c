@@ -223,13 +223,13 @@ static TCD_ERR_t TCD_ICG_Init(void)
 {
     TCD_ERR_t err = TCD_OK;
 
-    if ( (TCD_config->f_icg > 0U) && (TCD_config->f_icg <= 100U) )
+    if ( (TCD_config->t_icg_us > 0U) && (TCD_config->t_icg_us <= CFG_ICG_MAX_PERIOD_US) )
     {
-        TCD_PORT_ConfigICGClock( TCD_config->f_icg );
+        TCD_PORT_ConfigICGClock( TCD_config->t_icg_us );
     }
     else
     {
-        TCD_PORT_ConfigICGClock( CFG_ICG_DEFAULT_FREQ_HZ );
+        TCD_PORT_ConfigICGClock( CFG_ICG_DEFAULT_PERIOD_US );
         err = TCD_WARN_ICG;
     }
 

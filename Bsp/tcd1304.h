@@ -36,7 +36,7 @@ typedef struct
 {
     uint32_t avg;
     uint32_t f_master;
-    uint32_t f_icg;
+    uint32_t t_icg_us;
     uint32_t t_int_us;
 } TCD_CONFIG_t;
 
