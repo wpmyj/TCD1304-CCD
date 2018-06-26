@@ -240,15 +240,22 @@ static TCD_ERR_t TCD_ICG_Init(void)
  * @Brief   Generate the electronic shutter (SH) pulses
  * @param   None
  * @retval  None
- * Check that the SH period is within the limits. >10 us and < ICG period.
+ * Check that the SH period is within the limits. >=10 us and < ICG period.
+ * In addition the SH and the ICG pulses MUST overlap. This is fullfilled if
+ * this relationship is held:
+ * P_ICG = N x P_SH, where N is an integer. 
  ******************************************************************************/
 static TCD_ERR_t TCD_SH_Init(void)
 {
     TCD_ERR_t err = TCD_OK;
 
-    uint32_t icg_period = 1000000U / TCD_config->f_icg;
-
-    if ( (TCD_config->t_int_us >= 10U) && (TCD_config->t_int_us < icg_period) )
+    /* Check that P_ICG = N x P_SH, where N is an integer */
+    if ( TCD_config->t_icg_us % TCD_config->t_int_us)
+    {
+        return TCD_ERR_SH_INIT;
+    }
+    
+    if ( (TCD_config->t_int_us >= 10U) && (TCD_config->t_int_us <= TCD_config->t_icg_us) )
     {
         TCD_PORT_ConfigSHClock( TCD_config->t_int_us );
     }
