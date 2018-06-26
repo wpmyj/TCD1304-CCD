@@ -60,10 +60,10 @@ static uint8_t UART_RxBuf[12];
 /* Private variables ---------------------------------------------------------*/
 static TCD_CONFIG_t sensor_config = 
 {
-    .avg = 10,
-    .f_master = 2000000,
-    .f_icg = 10,
-    .t_int_us = 100,
+    .avg = 10,              /* Averaging:        10     */
+    .f_master = 2000000,    /* Master clock:     2 MHz  */
+    .t_icg_us = 100000,     /* Readout period:   100 ms */
+    .t_int_us = 100,        /* Integration time: 100 us */
 };
 
 /* Private function prototypes -----------------------------------------------*/
