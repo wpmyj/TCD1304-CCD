@@ -591,12 +591,15 @@ void TCD_ICG_TIMER_INTERRUPT_HANDLER(void)
  ******************************************************************************/
 void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
 {
-    TCD_PORT_DisableADCTrigger();
-
+    if ( hdma_adc3.Instance->NDTR == CFG_CCD_NUM_PIXELS )
+    {
+        TCD_PORT_DisableADCTrigger();
+    
+        /* Do something with the acquired AD samples in RAM */
+        TCD_ReadCompletedCallback();
+    }
+    
     HAL_DMA_IRQHandler( &hdma_adc3 );
-
-    /* Do something with the acquired AD samples in RAM */
-    TCD_ReadCompletedCallback();
 }
 
 /****************************** END OF FILE ***********************************/

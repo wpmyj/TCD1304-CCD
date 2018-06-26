@@ -67,11 +67,11 @@ extern "C"
  * In STM32 MCU 4 interrupt priority bits are implemented. This means that
  * the lowest (highest value) interrupt priority is 15 (0x0F).
  * We set: 
- * TIM_ICG_INTERRUPT_LEVEL to default value = 14.
- * DMA_ADC_INTERRUPT_LEVEL to default value = 15.
+ * TIM_ICG_INTERRUPT_LEVEL to default value = 6.
+ * DMA_ADC_INTERRUPT_LEVEL to default value = 5.
  */
-#define TIM_ICG_INTERRUPT_LEVEL             (14U)      /* Almost lowest level */
-#define DMA_ADC_INTERRUPT_LEVEL             (15U)             /* Lowest level */
+#define TIM_ICG_INTERRUPT_LEVEL             (6U)
+#define DMA_ADC_INTERRUPT_LEVEL             (5U)
 
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
