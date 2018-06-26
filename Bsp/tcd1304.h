@@ -40,6 +40,13 @@ typedef struct
     uint32_t t_int_us;
 } TCD_CONFIG_t;
 
+typedef struct
+{
+    uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
+    uint16_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
+    uint32_t SensorDataAccu[ CFG_CCD_NUM_PIXELS ];
+} TCD_DATA_t;
+
 typedef enum
 {
     TCD_OK = 0,

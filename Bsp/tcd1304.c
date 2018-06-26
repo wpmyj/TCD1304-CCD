@@ -26,9 +26,7 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct
 {
-    uint16_t SensorData[ CFG_CCD_NUM_PIXELS ];
-    uint16_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
-    uint32_t SensorDataAccu[ CFG_CCD_NUM_PIXELS ];
+    TCD_DATA_t data;
     uint8_t readyToRun;
     volatile uint8_t dataReady;
     uint32_t specIndex;
