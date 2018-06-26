@@ -152,7 +152,7 @@ void TCD_ReadCompletedCallback(void)
     }
 
     /* Calculate average data vector */
-    if ( TCD_pcb.specIndex == (TCD_config->avg - 1U) )
+    if ( TCD_pcb.specIndex == TCD_config->avg )
     {
         for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
         {
