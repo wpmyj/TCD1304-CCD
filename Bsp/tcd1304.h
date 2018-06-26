@@ -82,7 +82,7 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config);
 TCD_ERR_t TCD_Start(void);
 TCD_ERR_t TCD_Stop(void);
 
-uint16_t* TCD_GetSensorDataBuffer(void);
+TCD_DATA_t* TCD_GetSensorData(void);
 uint64_t TCD_GetNumOfSpectrumsAcquired(void);
 
 uint8_t TCD_IsDataReady(void);

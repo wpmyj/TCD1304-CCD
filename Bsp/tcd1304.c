@@ -146,7 +146,7 @@ void TCD_ReadCompletedCallback(void)
     /* Accumulate the spectrum data vector */
     for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
     {
-        TCD_pcb.SensorDataAccu[ i ] += TCD_pcb.SensorData[ i ];
+        TCD_pcb.data.SensorDataAccu[ i ] += TCD_pcb.data.SensorData[ i ];
     }
 
     /* Calculate average data vector */
@@ -154,8 +154,8 @@ void TCD_ReadCompletedCallback(void)
     {
         for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
         {
-            TCD_pcb.SensorDataAvg[ i ] = (uint16_t) (TCD_pcb.SensorDataAccu[ i ] / TCD_config->avg);
-            TCD_pcb.SensorDataAccu[ i ] = 0U;
+            TCD_pcb.data.SensorDataAvg[ i ] = (uint16_t) (TCD_pcb.data.SensorDataAccu[ i ] / TCD_config->avg);
+            TCD_pcb.data.SensorDataAccu[ i ] = 0U;
         }
 
         TCD_pcb.specIndex = 0U;
@@ -169,9 +169,9 @@ void TCD_ReadCompletedCallback(void)
  * @retval  
  *
  ******************************************************************************/
-uint16_t* TCD_GetSensorDataBuffer(void)
+TCD_DATA_t* TCD_GetSensorData(void)
 {
-    return TCD_pcb.SensorDataAvg;
+    return &TCD_pcb.data;
 }
 
 /*******************************************************************************
@@ -308,7 +308,7 @@ static TCD_ERR_t TCD_ADC_Init(void)
     TCD_PORT_ConfigADCTrigger();
 
     /* Start the DMA transfer */
-    if ( TCD_PORT_StartADC( TCD_pcb.SensorData ) == 0 )
+    if ( TCD_PORT_StartADC( TCD_pcb.data.SensorData ) == 0 )
     {
         return TCD_OK;
     }

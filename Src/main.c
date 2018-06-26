@@ -110,8 +110,8 @@ int main(void)
             TCD_ClearDataReadyFlag();
             requestToSendFlag = 0U;
             
-            uint16_t *data = TCD_GetSensorDataBuffer();
-            HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data, 2U * CFG_CCD_NUM_PIXELS );
+            TCD_DATA_t *data = TCD_GetSensorData();
+            HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data->SensorDataAvg, 2U * CFG_CCD_NUM_PIXELS );
         }
     }
 }
