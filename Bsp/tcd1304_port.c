@@ -140,7 +140,7 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
  * @retval
  *
  ******************************************************************************/
-int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
+int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
 {
     TIM_ClockConfigTypeDef sClockSourceConfig;
     TIM_MasterConfigTypeDef sMasterConfig;
@@ -148,7 +148,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t freq)
     GPIO_InitTypeDef GPIO_InitStruct;
     int32_t err = 0;
     uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
-    uint32_t period = CFG_FM_FREQUENCY_HZ / freq - 1U;
+    uint32_t period = (uint32_t) ((uint64_t) t_icg_us * CFG_FM_FREQUENCY_HZ / 1000000U) - 1U;
     uint32_t pulse = CFG_ICG_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
 
     /* Peripheral clock enable */
