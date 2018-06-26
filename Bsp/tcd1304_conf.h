@@ -58,7 +58,7 @@ extern "C"
  * Minimum integration time is >= 10 us.
  * Minimum SH pulse width is >= 2 us.
  */
-#define CFG_SH_DEFAULT_PERIOD_US            (1000U)
+#define CFG_SH_DEFAULT_PERIOD_US            (100U)
 #define CFG_SH_DEFAULT_PULSE_US             (3U)
 #define CFG_SH_DEFAULT_PULSE_DELAY_CNT      (1U)
 
@@ -66,8 +66,9 @@ extern "C"
  * The period time of the ICG pulse determines the sensor data readout period.
  * Minimum ICG pulse width is >= 5 us.
  */
-#define CFG_ICG_DEFAULT_PERIOD_MS           (100U)
-#define CFG_ICG_DEFAULT_FREQ_HZ             (1000U / CFG_ICG_DEFAULT_PERIOD_MS)
+#define CFG_ICG_DEFAULT_PERIOD_US           (100000U)
+#define CFG_ICG_MAX_PERIOD_US               (10000000U)
+#define CFG_ICG_DEFAULT_FREQ_HZ             (1000000U / CFG_ICG_DEFAULT_PERIOD_US)
 #define CFG_ICG_DEFAULT_PULSE_US            (6U)
 #define CFG_ICG_DEFAULT_PULSE_DELAY_CNT     (0U)
 
