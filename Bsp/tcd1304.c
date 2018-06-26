@@ -30,6 +30,7 @@ typedef struct
     uint16_t SensorDataAvg[ CFG_CCD_NUM_PIXELS ];
     uint32_t SensorDataAccu[ CFG_CCD_NUM_PIXELS ];
     uint8_t readyToRun;
+    volatile uint8_t dataReady;
     uint32_t specIndex;
     uint64_t totalSpectrumsAcquired;
 } TCD_PCB_t;
@@ -103,6 +104,7 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
     TCD_pcb.specIndex = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
     TCD_pcb.readyToRun = 1U;
+    TCD_pcb.dataReady = 0U;
 
     return err;
 }
@@ -159,6 +161,7 @@ void TCD_ReadCompletedCallback(void)
         }
 
         TCD_pcb.specIndex = 0U;
+        TCD_pcb.dataReady = 1U;
     }
 }
 
@@ -171,6 +174,28 @@ void TCD_ReadCompletedCallback(void)
 uint16_t* TCD_GetSensorDataBuffer(void)
 {
     return TCD_pcb.SensorDataAvg;
+}
+
+/*******************************************************************************
+ * @brief   Check if new data is ready
+ * @param   None
+ * @retval  1U on ready and 0U on not ready
+ *
+ ******************************************************************************/
+uint8_t TCD_IsDataReady(void)
+{
+    return TCD_pcb.dataReady;
+}
+
+/*******************************************************************************
+ * @brief   Clear the data ready flag
+ * @param   None
+ * @retval  None
+ *
+ ******************************************************************************/
+void TCD_ClearDataReadyFlag(void)
+{
+    TCD_pcb.dataReady = 0U;
 }
 
 /*******************************************************************************

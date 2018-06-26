@@ -78,6 +78,9 @@ TCD_ERR_t TCD_Stop(void);
 uint16_t* TCD_GetSensorDataBuffer(void);
 uint64_t TCD_GetNumOfSpectrumsAcquired(void);
 
+uint8_t TCD_IsDataReady(void);
+void TCD_ClearDataReadyFlag(void);
+
 #ifdef __cplusplus
 }
 #endif
