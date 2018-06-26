@@ -29,7 +29,7 @@ typedef struct
     TCD_DATA_t data;
     uint8_t readyToRun;
     volatile uint8_t dataReady;
-    uint32_t counter;
+    volatile uint32_t counter;
     uint64_t totalSpectrumsAcquired;
 } TCD_PCB_t;
 
