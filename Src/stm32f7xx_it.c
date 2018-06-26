@@ -46,7 +46,15 @@ void SysTick_Handler(void)
 */
 void DMA2_Stream2_IRQHandler(void)
 {
+    extern volatile uint8_t requestToSendFlag;
+
     HAL_DMA_IRQHandler( &hdma_usart1_rx );
+    
+    /* Check that 12 bytes is received. DMA in Circular mode has restarted. */
+    if (hdma_usart1_rx.Instance->NDTR == 12U )
+    {
+        requestToSendFlag = 1U;
+    }
 }
 
 /**
@@ -55,6 +63,7 @@ void DMA2_Stream2_IRQHandler(void)
 void DMA2_Stream7_IRQHandler(void)
 {
     extern UART_HandleTypeDef huart1;
+
     HAL_DMA_IRQHandler( &hdma_usart1_tx );
 
     huart1.gState = HAL_UART_STATE_READY;

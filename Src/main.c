@@ -56,6 +56,7 @@ DMA_HandleTypeDef hdma_usart1_rx;
 
 static char strBuf[ 128 ];
 static uint8_t UART_RxBuf[12];
+volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
 static TCD_CONFIG_t sensor_config = 
@@ -103,9 +104,15 @@ int main(void)
     
     while ( 1 )
     {
-        HAL_Delay( 1000 );
-        sprintf( strBuf, "# of Spectrums = %llu\r\n", TCD_GetNumOfSpectrumsAcquired() );
-        HAL_UART_Transmit_DMA( &huart1, (uint8_t *) strBuf, strlen( strBuf ) );
+        if ( TCD_IsDataReady() && (requestToSendFlag == 1U) )
+        {
+            /* Clear the flags */
+            TCD_ClearDataReadyFlag();
+            requestToSendFlag = 0U;
+            
+            uint16_t *data = TCD_GetSensorDataBuffer();
+            HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data, 2U * CFG_CCD_NUM_PIXELS );
+        }
     }
 }
 
