@@ -29,7 +29,7 @@ typedef struct
     TCD_DATA_t data;
     uint8_t readyToRun;
     volatile uint8_t dataReady;
-    uint32_t specIndex;
+    uint32_t counter;
     uint64_t totalSpectrumsAcquired;
 } TCD_PCB_t;
 
@@ -99,7 +99,7 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
         return err;
     }
 
-    TCD_pcb.specIndex = 0U;
+    TCD_pcb.counter = 0U;
     TCD_pcb.totalSpectrumsAcquired = 0U;
     TCD_pcb.readyToRun = 1U;
     TCD_pcb.dataReady = 0U;
@@ -141,7 +141,7 @@ TCD_ERR_t TCD_Start(void)
 void TCD_ReadCompletedCallback(void)
 {
     TCD_pcb.totalSpectrumsAcquired++;
-    TCD_pcb.specIndex++;
+    TCD_pcb.counter++;
 
     /* Accumulate the spectrum data vector */
     for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
@@ -150,7 +150,7 @@ void TCD_ReadCompletedCallback(void)
     }
 
     /* Calculate average data vector */
-    if ( TCD_pcb.specIndex == TCD_config->avg )
+    if ( TCD_pcb.counter == TCD_config->avg )
     {
         for ( uint32_t i = 0U; i < CFG_CCD_NUM_PIXELS; i++ )
         {
@@ -158,15 +158,15 @@ void TCD_ReadCompletedCallback(void)
             TCD_pcb.data.SensorDataAccu[ i ] = 0U;
         }
 
-        TCD_pcb.specIndex = 0U;
+        TCD_pcb.counter = 0U;
         TCD_pcb.dataReady = 1U;
     }
 }
 
 /*******************************************************************************
- * @brief   
- * @param   
- * @retval  
+ * @brief
+ * @param
+ * @retval
  *
  ******************************************************************************/
 TCD_DATA_t* TCD_GetSensorData(void)
@@ -266,7 +266,7 @@ static TCD_ERR_t TCD_ICG_Init(void)
  * Check that the SH period is within the limits. >=10 us and < ICG period.
  * In addition the SH and the ICG pulses MUST overlap. This is fullfilled if
  * this relationship is held:
- * P_ICG = N x P_SH, where N is an integer. 
+ * P_ICG = N x P_SH, where N is an integer.
  ******************************************************************************/
 static TCD_ERR_t TCD_SH_Init(void)
 {
@@ -277,7 +277,7 @@ static TCD_ERR_t TCD_SH_Init(void)
     {
         return TCD_ERR_SH_INIT;
     }
-    
+
     if ( (TCD_config->t_int_us >= 10U) && (TCD_config->t_int_us <= TCD_config->t_icg_us) )
     {
         TCD_PORT_ConfigSHClock( TCD_config->t_int_us );
