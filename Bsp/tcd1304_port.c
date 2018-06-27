@@ -301,14 +301,14 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t intTime_us)
  * @retval
  *
  ******************************************************************************/
-void TCD_PORT_ConfigADCTrigger(void)
+void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
 {
     TIM_ClockConfigTypeDef sClockSourceConfig;
     TIM_MasterConfigTypeDef sMasterConfig;
     TIM_OC_InitTypeDef sConfigOC;
     GPIO_InitTypeDef GPIO_InitStruct;
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
-    uint32_t period = 4U * HAL_RCC_GetSysClockFreq() / CFG_FM_FREQUENCY_HZ - 1U;
+    uint32_t period = 4U * HAL_RCC_GetSysClockFreq() / Fs - 1U;
 
     /* Peripheral clock enable */
     __HAL_RCC_TIM8_CLK_ENABLE();

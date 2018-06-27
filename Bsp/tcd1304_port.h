@@ -83,7 +83,7 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t integrationTime);
 int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us);
 
 int32_t TCD_PORT_InitADC(void);
-void    TCD_PORT_ConfigADCTrigger(void);
+void    TCD_PORT_ConfigADCTrigger(uint32_t Fs);
 int32_t TCD_PORT_StartADC(uint16_t *dataBuffer);
 
 /**

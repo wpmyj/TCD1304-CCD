@@ -305,7 +305,7 @@ static TCD_ERR_t TCD_ADC_Init(void)
     }
 
     /* Initialize the timer used to trigger AD conversion */
-    TCD_PORT_ConfigADCTrigger();
+    TCD_PORT_ConfigADCTrigger( TCD_config->f_master / 4U );
 
     /* Start the DMA transfer */
     if ( TCD_PORT_StartADC( TCD_pcb.data.SensorData ) == 0 )
