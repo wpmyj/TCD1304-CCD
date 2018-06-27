@@ -66,7 +66,7 @@ extern "C"
  *
  * In STM32 MCU 4 interrupt priority bits are implemented. This means that
  * the lowest (highest value) interrupt priority is 15 (0x0F).
- * We set: 
+ * We set:
  * TIM_ICG_INTERRUPT_LEVEL to default value = 6.
  * DMA_ADC_INTERRUPT_LEVEL to default value = 5.
  */
@@ -79,7 +79,7 @@ extern "C"
 void    TCD_PORT_Run(void);
 
 int32_t TCD_PORT_ConfigMasterClock(const uint32_t freq);
-int32_t TCD_PORT_ConfigSHClock(const uint32_t integrationTime);
+int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us);
 int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us);
 
 int32_t TCD_PORT_InitADC(void);
