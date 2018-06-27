@@ -50,12 +50,37 @@ static uint8_t UART_RxBuf[12];
 volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
-static TCD_CONFIG_t sensor_config = 
+
+/*******************************************************************************
+ *                      TCD1304 SENSOR CONFIGURATION
+ *******************************************************************************
+ *
+ * Configuration for the TCD1304 CCD sensor.
+ * Readout period must be dividable by integration time, i.e.
+ * t_icg_us = N x t_int_us, where N is an integer.
+ *
+ * The sensor data readout time is determined by the data clock frequency and
+ * the number of pixels that must be output.
+ * At 4 MHz master clock it takes 3694 x (4 / 4 MHz) = 3.694 ms
+ * The ICG period (readout period) is therefore set to 3.8 ms, given 100 us
+ * time for the ICG pulse and interrupt reaction time. This is plenty of time.
+ *
+ * In high light levels, the integration time is needed to be set low to avoid
+ * over-exposure of the CCD photodiodes.
+ *
+ * This firmware is collecting all available sensor data at the maximum readout
+ * frequency. The data from each readout is accumulated in
+ * TCD_ReadCompletedCallback() in tcd1304.c
+ *
+ * At every avg x t_icg_us = 1.52 seconds averaged data is available for readout.
+ *
+ ******************************************************************************/
+static TCD_CONFIG_t sensor_config =
 {
-    .avg = 10,              /* Averaging:        10     */
-    .f_master = 2000000,    /* Master clock:     2 MHz  */
-    .t_icg_us = 100000,     /* Readout period:   100 ms */
-    .t_int_us = 100,        /* Integration time: 100 us */
+    .avg = 400,             /* Averaging:        400    */
+    .f_master = 4000000,    /* Master clock:     2 MHz  */
+    .t_icg_us = 3800,       /* Readout period:   3.8 ms */
+    .t_int_us = 10,         /* Integration time: 10 us  */
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,7 +107,7 @@ int main(void)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-    
+
     /* Initialize and start the TCD1304 CCD sensor */
     if ( TCD_Init( &sensor_config ) != TCD_OK )
     {
