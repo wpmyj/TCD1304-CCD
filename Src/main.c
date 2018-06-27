@@ -117,15 +117,15 @@ int main(void)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-    
+
     while ( 1 )
     {
-        if ( TCD_IsDataReady() && (requestToSendFlag == 1U) )
+        if ( (TCD_IsDataReady() == 1) && (requestToSendFlag == 1U) )
         {
             /* Clear the flags */
             TCD_ClearDataReadyFlag();
             requestToSendFlag = 0U;
-            
+
             TCD_DATA_t *data = TCD_GetSensorData();
             HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data->SensorDataAvg, 2U * CFG_CCD_NUM_PIXELS );
         }
