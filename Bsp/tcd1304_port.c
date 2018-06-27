@@ -362,7 +362,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
 
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1;
     sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
-    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
+    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 
     if ( HAL_TIMEx_MasterConfigSynchronization( &htim8, &sMasterConfig ) != HAL_OK )
     {
