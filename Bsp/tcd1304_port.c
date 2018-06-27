@@ -462,7 +462,7 @@ int32_t TCD_PORT_InitADC(void)
     hadc3.Init.ScanConvMode = DISABLE;
     hadc3.Init.ContinuousConvMode = DISABLE;
     hadc3.Init.DiscontinuousConvMode = DISABLE;
-    hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+    hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;
     hadc3.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T8_TRGO;
     hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     hadc3.Init.NbrOfConversion = 1;
@@ -480,7 +480,7 @@ int32_t TCD_PORT_InitADC(void)
      */
     sConfig.Channel = ADC_CHANNEL_4;
     sConfig.Rank = ADC_REGULAR_RANK_1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+    sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
 
     if ( HAL_ADC_ConfigChannel( &hadc3, &sConfig ) != HAL_OK )
     {
