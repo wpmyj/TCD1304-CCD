@@ -321,7 +321,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     TIM_OC_InitTypeDef sConfigOC;
     GPIO_InitTypeDef GPIO_InitStruct;
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
-    uint32_t period = 4U * HAL_RCC_GetSysClockFreq() / Fs - 1U;
+    uint32_t period = HAL_RCC_GetSysClockFreq() / Fs - 1U;
     timer_conf.Fs = Fs;
     
     /* Peripheral clock enable */
