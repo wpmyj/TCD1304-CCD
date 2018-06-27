@@ -56,7 +56,7 @@ volatile uint8_t requestToSendFlag = 0;
 TCD_CONFIG_t sensor_config =
 {
     .avg = 400,             /* Averaging:        400    */
-    .f_master = 4000000,    /* Master clock:     2 MHz  */
+    .f_master = 4000000,    /* Master clock:     4 MHz  */
     .t_icg_us = 3800,       /* Readout period:   3.8 ms */
     .t_int_us = 10,         /* Integration time: 10 us  */
 };

@@ -64,8 +64,13 @@ void DMA2_Stream2_IRQHandler(void)
         /* Check if the integration time has changed */
         if ( (UART_RxBuf[ 0 ] == 'E') && (t_sh_us != sensor_config.t_int_us) )
         {
+            /* Set new integration time to the struct */
+            sensor_config.t_int_us = t_sh_us;
+            
+            /* Tell the hardware to set a new integration time */
             TCD_SetIntTime( &sensor_config );
-            requestToSendFlag = 1U;
+            
+            requestToSendFlag = 0U;
         }
         else
         {
