@@ -303,7 +303,12 @@ static TCD_ERR_t TCD_ADC_Init(void)
     {
         return TCD_ERR_ADC_INIT;
     }
-
+    
+    /* Check that the master clock is dividable by 4 */
+    if ( TCD_config->f_master % 4U )
+    {
+        return TCD_ERR_ADC_INIT;
+    }
     /* Initialize the timer used to trigger AD conversion */
     TCD_PORT_ConfigADCTrigger( TCD_config->f_master / 4U );
 
