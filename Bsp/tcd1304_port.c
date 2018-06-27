@@ -608,7 +608,7 @@ void TCD_ICG_TIMER_INTERRUPT_HANDLER(void)
  ******************************************************************************/
 void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
 {
-    if ( hdma_adc3.Instance->NDTR == CFG_CCD_NUM_PIXELS )
+    if ( __HAL_DMA_GET_FLAG( &hdma_adc3, DMA_FLAG_TCIF0_4) )
     {
         TCD_PORT_DisableADCTrigger();
     
