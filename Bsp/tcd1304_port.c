@@ -41,12 +41,12 @@ typedef struct
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim8;
-extern TIM_HandleTypeDef htim13;
-extern TIM_HandleTypeDef htim14;
-extern ADC_HandleTypeDef hadc3;
-extern DMA_HandleTypeDef hdma_adc3;
+static TIM_HandleTypeDef htim2;
+static TIM_HandleTypeDef htim8;
+static TIM_HandleTypeDef htim13;
+static TIM_HandleTypeDef htim14;
+static ADC_HandleTypeDef hadc3;
+static DMA_HandleTypeDef hdma_adc3;
 
 static PORT_TIMER_CONF_t timer_conf;
 

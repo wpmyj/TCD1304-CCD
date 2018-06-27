@@ -42,19 +42,10 @@
 #include "string.h"
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc3;
-DMA_HandleTypeDef hdma_adc3;
-
-TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim8;
-TIM_HandleTypeDef htim13;
-TIM_HandleTypeDef htim14;
-
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
 
-static char strBuf[ 128 ];
 static uint8_t UART_RxBuf[12];
 volatile uint8_t requestToSendFlag = 0;
 
