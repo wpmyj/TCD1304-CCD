@@ -77,6 +77,7 @@ extern "C"
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void    TCD_PORT_Run(void);
+void    TCD_PORT_Stop(void);
 
 int32_t TCD_PORT_ConfigMasterClock(const uint32_t freq);
 int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us);

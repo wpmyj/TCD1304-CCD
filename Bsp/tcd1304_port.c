@@ -75,9 +75,26 @@ void TCD_PORT_Run(void)
     /* Disable the DMA transfer half complete interrupt */
     __HAL_DMA_DISABLE_IT( &hdma_adc3, DMA_IT_HT );
 
+    /* Reset the timer counters to 0 */
+    htim2.Instance->CNT = 0U;
+    htim14.Instance->CNT = 0U;
+    htim13.Instance->CNT = 0U;
+    
     __HAL_TIM_ENABLE( &htim2 );         /* ICG TIMER */
     __HAL_TIM_ENABLE( &htim14 );        /* SH TIMER */
     __HAL_TIM_ENABLE( &htim13 );        /* fM TIMER */
+}
+
+/*******************************************************************************
+ * @Brief   Start to generate ICG pulses and SH pulses
+ * @param   None
+ * @retval  None
+ ******************************************************************************/
+void TCD_PORT_Stop(void)
+{
+    htim2.Instance->CR1 &= ~TIM_CR1_CEN;         /* ICG TIMER */
+    htim14.Instance->CR1 &= ~TIM_CR1_CEN;        /* SH TIMER */
+    htim13.Instance->CR1 &= ~TIM_CR1_CEN;        /* fM TIMER */
 }
 
 /*******************************************************************************

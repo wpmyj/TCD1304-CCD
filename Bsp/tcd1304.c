@@ -128,6 +128,27 @@ TCD_ERR_t TCD_Start(void)
 }
 
 /*******************************************************************************
+ * @brief   Stop the timers and data acquisition with ADC+DMA
+ * @param   None
+ * @retval  TCD_OK on success or TCD_ERR_t code
+ *
+ ******************************************************************************/
+TCD_ERR_t TCD_Stop(void)
+{
+    if ( TCD_pcb.readyToRun == 1U )
+    {
+        /* Stop to generate ICG and SH pulses */
+        TCD_PORT_Stop();
+        return TCD_OK;
+    }
+    else
+    {
+        return TCD_ERR_NOT_INITIALIZED;
+    }
+}
+
+
+/*******************************************************************************
  * @brief   Handle sensor data when the ADC+DMA has samples all pixels.
  * @param   pSensorDataBuf, address to the RAM locating
  * @retval
