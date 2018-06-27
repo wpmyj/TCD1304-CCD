@@ -79,6 +79,7 @@ typedef enum
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 TCD_ERR_t TCD_Init(TCD_CONFIG_t *config);
+TCD_ERR_t TCD_SetIntTime(TCD_CONFIG_t *config);
 TCD_ERR_t TCD_Start(void);
 TCD_ERR_t TCD_Stop(void);
 

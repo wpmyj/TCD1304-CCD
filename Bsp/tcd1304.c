@@ -107,6 +107,43 @@ TCD_ERR_t TCD_Init(TCD_CONFIG_t *config)
     return err;
 }
 
+TCD_ERR_t TCD_SetIntTime(TCD_CONFIG_t *config)
+{
+    if ( TCD_pcb.readyToRun == 1U )
+    {
+        TCD_PORT_Stop();
+        
+        /* Find the first valid integration time */
+        uint32_t remainder;
+        uint32_t t_int_us = config->t_int_us;
+        
+        do
+        {
+            remainder = config->t_icg_us % t_int_us;
+            t_int_us++;
+        }            
+        while ( (remainder != 0U) && (t_int_us <= config->t_icg_us) );
+        
+        if ( config->t_int_us <= config->t_icg_us )
+        {
+            config->t_int_us = t_int_us - 1U;
+            
+            TCD_SH_Init();
+            TCD_PORT_Run();
+            
+            return TCD_OK;
+        }
+        else
+        {
+            return TCD_ERR_PARAM_OUT_OF_RANGE;
+        }
+    }
+    else
+    {
+        return TCD_ERR_NOT_INITIALIZED;
+    }
+}
+
 /*******************************************************************************
  * @brief   Start the timers and data acquisition with ADC+DMA
  * @param   None
