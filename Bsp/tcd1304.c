@@ -217,13 +217,13 @@ uint64_t TCD_GetNumOfSpectrumsAcquired(void)
  * @Brief   Generate the Master Clock for the CCD sensor
  * @param   None
  * @retval  None
- * Check that the master clock is within the limits of the sensor; 0.4 - 4 MHz.
+ * Check that the master clock is within the limits of the sensor; 0.8 - 4 MHz.
  ******************************************************************************/
 static TCD_ERR_t TCD_FM_Init(void)
 {
     TCD_ERR_t err = TCD_OK;
 
-    if ( (TCD_config->f_master < 4000000U) && (TCD_config->f_master > 400000U) )
+    if ( (TCD_config->f_master <= 4000000U) && (TCD_config->f_master >= 800000U) )
     {
         TCD_PORT_ConfigMasterClock( TCD_config->f_master );
     }
