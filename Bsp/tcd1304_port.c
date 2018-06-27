@@ -30,6 +30,14 @@
 #include "tcd1304_port.h"
 
 /* Private typedef -----------------------------------------------------------*/
+typedef struct
+{
+    uint32_t f_master;
+    uint32_t t_int_us;
+    uint32_t t_icg_us;
+    uint32_t Fs;
+} PORT_TIMER_CONF_t;
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -39,6 +47,8 @@ extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
 extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
+
+static PORT_TIMER_CONF_t timer_conf;
 
 /* Private function prototypes -----------------------------------------------*/
 static void TCD_PORT_EnableADCTrigger(void);
@@ -79,7 +89,8 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     GPIO_InitTypeDef GPIO_InitStruct;
     int32_t err = 0;
     uint32_t period = (HAL_RCC_GetSysClockFreq() / 2U) / freq - 1U;
-
+    timer_conf.f_master = freq;
+    
     /* Peripheral clock enable */
     __HAL_RCC_TIM13_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -150,7 +161,8 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
     uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
     uint32_t period = (uint32_t) ((uint64_t) t_icg_us * CFG_FM_FREQUENCY_HZ / 1000000U) - 1U;
     uint32_t pulse = CFG_ICG_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
-
+    timer_conf.t_icg_us = t_icg_us;
+    
     /* Peripheral clock enable */
     __HAL_RCC_TIM2_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -241,7 +253,8 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t intTime_us)
     uint32_t prescaler = (HAL_RCC_GetSysClockFreq() / 2U) / CFG_FM_FREQUENCY_HZ - 1U;
     uint32_t period = intTime_us * CFG_FM_FREQUENCY_HZ / 1000000U - 1U;
     uint32_t pulse = CFG_SH_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
-
+    timer_conf.t_int_us = intTime_us;
+    
     /* Peripheral clock enable */
     __HAL_RCC_TIM14_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -309,7 +322,8 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     GPIO_InitTypeDef GPIO_InitStruct;
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
     uint32_t period = 4U * HAL_RCC_GetSysClockFreq() / Fs - 1U;
-
+    timer_conf.Fs = Fs;
+    
     /* Peripheral clock enable */
     __HAL_RCC_TIM8_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
