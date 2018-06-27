@@ -71,6 +71,9 @@ void TCD_PORT_Run(void)
 {
     TCD_PORT_ICG_SetDelay( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
     TCD_PORT_SH_SetDelay( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
+    
+    /* Disable the DMA transfer half complete interrupt */
+    __HAL_DMA_DISABLE_IT( &hdma_adc3, DMA_IT_HT );
 
     __HAL_TIM_ENABLE( &htim2 );         /* ICG TIMER */
     __HAL_TIM_ENABLE( &htim14 );        /* SH TIMER */
