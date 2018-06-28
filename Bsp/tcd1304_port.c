@@ -118,9 +118,9 @@ void TCD_PORT_Stop(void)
 }
 
 /*******************************************************************************
- * @brief
- * @param
- * @retval
+ * @brief   Configure the CCD master clock
+ * @param   freq, uint32_t: Clock frequency in MHz
+ * @retval  Error code
  *
  ******************************************************************************/
 int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
@@ -188,9 +188,9 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
 }
 
 /*******************************************************************************
- * @brief
- * @param
- * @retval
+ * @brief   Configure the ICG pulse generator with interrupt request
+ * @param   t_int_us, uint32_t: Sensor readout period in microseconds
+ * @retval  Error code
  *
  ******************************************************************************/
 int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
@@ -284,9 +284,9 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
 }
 
 /*******************************************************************************
- * @brief
- * @param
- * @retval
+ * @brief   Configure the SH pulse generator
+ * @param   t_int_us, uint32_t: Integration time for the CCD in microseconds
+ * @retval  Error code
  *
  ******************************************************************************/
 int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us)
@@ -356,9 +356,39 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us)
 }
 
 /*******************************************************************************
- * @brief
- * @param
- * @retval
+ * @brief   Configure the ADC trigger as One-Pulse-Timer with 3693 repetitions
+ * @param   Fs, uint32_t: ADC sampling frequency
+ * @retval  None
+ *
+ * Background:
+ * The ICG timer generates an ICG pulse. When this timer overflows, an interrupt is
+ * generated. In this interrupt handler, the ADC Trigger timer is started.
+ * Remember that the DMA is connected to the ADC in CIRCULAR mode. When the DMA has
+ * transfered 3694 ADC samples to RAM, a new interrupt is generated. In this
+ * interrupt handler the ADC trigger timer MUST be disabled to avoid false restart of
+ * ADC sampling.
+ *
+ * The problem:
+ * The ADC runs up to 1 MSamples/s with 4 MHz master clock. This means that when the
+ * last sample of the ADC is transfered by the DMA, we have 1 us to disable the ADC
+ * trigger timer to stop the DMA. The STM32F7 running at 216 MHz from FLASH needs
+ * approximately 100 ns to start execution in interrupt handlers.
+ *
+ * In an MCU system it can possibly be many interrupts enabled and with different
+ * interrupt priority levels. Also, the interrupts can be temporary disabled for
+ * a short time to handle a critical section in the software.
+ * This can lead to the situation where the DMA has restarted a new transfer to RAM.
+ * How far the DMA has moved the data is dependent on how long time the
+ * interrupt handler is delayed. This causes misaligned spectrum data.
+ *
+ * Solution:
+ * The STM32 timers has a function called One-Pulse-Timer. This timer is programmed
+ * to generate 3694 pulses when triggered. We use software trigger, by enabling the
+ * CEN bit in timer CR1 register. When this timer has generated 3694 pulses, it
+ * automatically shuts down the counter by disabling the CEN bit in its own CR1
+ * register. This eliminates the above problem, and the interrupt response time is no
+ * longer an issue. This commit utilize this nice hardware function to avoid
+ * any potential issues with data alignment.
  *
  ******************************************************************************/
 void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
@@ -459,9 +489,9 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
 }
 
 /*******************************************************************************
- * @brief
- * @param
- * @retval
+ * @brief   Configure the ADC with 12 bit and 3 cycles sampling time
+ * @param   None
+ * @retval  None
  *
  ******************************************************************************/
 int32_t TCD_PORT_InitADC(void)
