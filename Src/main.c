@@ -25,7 +25,13 @@ UART_HandleTypeDef huart1;
 volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
-
+const char HEADER[] = 
+"--------------------------------------\r\n"
+"          STM32F746 Discovery         \r\n"
+"          TCD1304 Linear CCD          \r\n"
+"                                      \r\n"
+"          2018 Dung Do Dang           \r\n"
+"--------------------------------------\r\n";
 /*******************************************************************************
  *                      TCD1304 SENSOR CONFIGURATION
  *******************************************************************************
@@ -69,6 +75,9 @@ int main(void)
 {
     /* Initialize the MCU and all configured peripherals */
     MCU_Init();
+    
+    /* Display some welcome text to the user */
+    HAL_UART_Transmit( &huart1, (uint8_t *) HEADER, strlen(HEADER), 1000U );
     
     /* Initialize the command line interface (CLI) */
     if ( CLI_Init( &huart1 ) != CLI_OK )
