@@ -128,8 +128,10 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim13.Init.Period = period;
     htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
+    #endif
+    
     if ( HAL_TIM_Base_Init( &htim13 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -200,8 +202,10 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
     htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim2.Init.Period = period;
     htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
+    #endif
+    
     if ( HAL_TIM_Base_Init( &htim2 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -292,7 +296,10 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us)
     htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim14.Init.Period = period;
     htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    #endif
+    
     if ( HAL_TIM_Base_Init( &htim14 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -362,8 +369,10 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     htim8.Init.Period = period;
     htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     htim8.Init.RepetitionCounter = CFG_CCD_NUM_PIXELS;
+    #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
+    #endif
+    
     if ( HAL_TIM_Base_Init( &htim8 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -393,7 +402,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     }
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = period / 4U;
+    sConfigOC.Pulse = period / 10U;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -502,7 +511,12 @@ int32_t TCD_PORT_InitADC(void)
      * corresponding rank in the sequencer and its sample time.
      */
     sConfig.Channel = ADC_CHANNEL_4;
+    #ifdef ADC_REGULAR_RANK_1
     sConfig.Rank = ADC_REGULAR_RANK_1;
+    #else
+    sConfig.Rank = 1U;
+    #endif
+    
     sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
 
     if ( HAL_ADC_ConfigChannel( &hadc3, &sConfig ) != HAL_OK )
@@ -634,4 +648,9 @@ void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
     TCD_ReadCompletedCallback();
 }
 
+
+__weak void _Error_Handler(char *file, int line)
+{
+    /* User should implement this function some else */
+}
 /****************************** END OF FILE ***********************************/

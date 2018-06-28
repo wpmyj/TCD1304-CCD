@@ -73,6 +73,19 @@ extern "C"
 #define TIM_ICG_INTERRUPT_LEVEL             (6U)
 #define DMA_ADC_INTERRUPT_LEVEL             (5U)
 
+/**
+ *******************************************************************************
+ *                         LEGACY STM32 HAL DEFINITIONS
+ *******************************************************************************
+ */
+#ifndef GPIO_SPEED_FREQ_VERY_HIGH
+    #define GPIO_SPEED_FREQ_VERY_HIGH       GPIO_SPEED_HIGH
+#endif
+
+#ifndef GPIO_SPEED_FREQ_LOW
+    #define GPIO_SPEED_FREQ_LOW             GPIO_SPEED_LOW
+#endif
+
 /* Exported macros -----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
