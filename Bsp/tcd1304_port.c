@@ -361,7 +361,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim8.Init.Period = period;
     htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim8.Init.RepetitionCounter = 0;
+    htim8.Init.RepetitionCounter = CFG_CCD_NUM_PIXELS;
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
     if ( HAL_TIM_Base_Init( &htim8 ) != HAL_OK )
@@ -379,7 +379,10 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-
+    if (HAL_TIM_OnePulse_Init(&htim8, TIM_OPMODE_SINGLE) != HAL_OK)
+    {
+        _Error_Handler(__FILE__, __LINE__);
+    }
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1;
     sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
     sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
