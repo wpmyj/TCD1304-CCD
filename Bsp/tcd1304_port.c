@@ -368,7 +368,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim8.Init.Period = period;
     htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim8.Init.RepetitionCounter = CFG_CCD_NUM_PIXELS;
+    htim8.Init.RepetitionCounter = CFG_CCD_NUM_PIXELS - 1U; /* Remember 1U less */
     #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     #endif
