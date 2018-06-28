@@ -407,6 +407,11 @@
               <FileType>1</FileType>
               <FilePath>../Src/stm32f7xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>cli.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\cli.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

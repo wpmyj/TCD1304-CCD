@@ -15,20 +15,23 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cli.h"
 #include "stm32f7xx_hal.h"
 #include "tcd1304.h"
 #include "string.h"
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
-DMA_HandleTypeDef hdma_usart1_tx;
-DMA_HandleTypeDef hdma_usart1_rx;
-
-uint8_t UART_RxBuf[12];
 volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
-
+const char HEADER[] = 
+"--------------------------------------\r\n"
+"          STM32F746 Discovery         \r\n"
+"          TCD1304 Linear CCD          \r\n"
+"                                      \r\n"
+"          2018 Dung Do Dang           \r\n"
+"--------------------------------------\r\n";
 /*******************************************************************************
  *                      TCD1304 SENSOR CONFIGURATION
  *******************************************************************************
@@ -62,26 +65,22 @@ TCD_CONFIG_t sensor_config =
 };
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
+static void SystemClock_Config(void);
 static void MX_USART1_UART_Init(void);
+static void MCU_Init(void);
 
 /* Private function prototypes -----------------------------------------------*/
 
 int main(void)
 {
-
-    /* Enable I-Cache-------------------------------------------------------------*/
-    SCB_EnableICache();
-
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
-
-    /* Configure the system clock */
-    SystemClock_Config();
-
-    /* Initialize all configured peripherals */
-    MX_USART1_UART_Init();
-    if (HAL_UART_Receive_DMA(&huart1, UART_RxBuf, sizeof(UART_RxBuf)) != HAL_OK )
+    /* Initialize the MCU and all configured peripherals */
+    MCU_Init();
+    
+    /* Display some welcome text to the user */
+    HAL_UART_Transmit( &huart1, (uint8_t *) HEADER, strlen(HEADER), 1000U );
+    
+    /* Initialize the command line interface (CLI) */
+    if ( CLI_Init( &huart1 ) != CLI_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
@@ -95,10 +94,10 @@ int main(void)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-    
+
     while ( 1 )
     {
-        if ( (TCD_IsDataReady() == 1) && (requestToSendFlag == 1U) )
+        if ( (TCD_IsDataReady() == 1U) && (requestToSendFlag == 1U) )
         {
             /* Clear the flags */
             TCD_ClearDataReadyFlag();
@@ -107,7 +106,28 @@ int main(void)
             TCD_DATA_t *data = TCD_GetSensorData();
             HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data->SensorDataAvg, 2U * CFG_CCD_NUM_PIXELS );
         }
+
+        CLI_CheckInputBuffer();
     }
+}
+
+/**
+ * @brief   Initialize the MCU system
+ * @retval  None
+ */
+static void MCU_Init(void)
+{
+    /* Enable I-Cache-------------------------------------------------------------*/
+    SCB_EnableICache();
+
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
+
+    /* Configure the system clock */
+    SystemClock_Config();
+
+    /* Initialize all configured peripherals */
+    MX_USART1_UART_Init();
 }
 
 /**
@@ -121,13 +141,15 @@ void SystemClock_Config(void)
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
-    /**Configure the main internal regulator output voltage
+    /**
+     * Configure the main internal regulator output voltage
      */
     __HAL_RCC_PWR_CLK_ENABLE();
 
     __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
 
-    /**Initializes the CPU, AHB and APB busses clocks
+    /**
+     * Initializes the CPU, AHB and APB busses clocks
      */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -142,14 +164,16 @@ void SystemClock_Config(void)
         _Error_Handler( __FILE__, __LINE__ );
     }
 
-    /**Activate the Over-Drive mode
+    /**
+     * Activate the Over-Drive mode
      */
     if ( HAL_PWREx_EnableOverDrive() != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
 
-    /**Initializes the CPU, AHB and APB busses clocks
+    /**
+     * Initializes the CPU, AHB and APB busses clocks
      */
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
             | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
@@ -203,10 +227,6 @@ static void MX_USART1_UART_Init(void)
 
 }
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
@@ -215,13 +235,10 @@ static void MX_USART1_UART_Init(void)
  */
 void _Error_Handler(char *file, int line)
 {
-    /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
     while ( 1 )
     {
         __BKPT( 0 );
     }
-    /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -249,4 +266,4 @@ void assert_failed(uint8_t* file, uint32_t line)
  * @}
  */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/****************************** END OF FILE ***********************************/
