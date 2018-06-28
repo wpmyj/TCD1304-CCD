@@ -15,6 +15,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cli.h"
 #include "stm32f7xx_hal.h"
 #include "tcd1304.h"
 #include "string.h"
@@ -81,7 +82,7 @@ int main(void)
 
     /* Initialize all configured peripherals */
     MX_USART1_UART_Init();
-    if (HAL_UART_Receive_DMA(&huart1, UART_RxBuf, sizeof(UART_RxBuf)) != HAL_OK )
+    if ( CLI_Init( &huart1 ) != CLI_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
@@ -95,10 +96,10 @@ int main(void)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-    
+
     while ( 1 )
     {
-        if ( (TCD_IsDataReady() == 1) && (requestToSendFlag == 1U) )
+        if ( (TCD_IsDataReady() == 1U) && (requestToSendFlag == 1U) )
         {
             /* Clear the flags */
             TCD_ClearDataReadyFlag();
@@ -107,6 +108,8 @@ int main(void)
             TCD_DATA_t *data = TCD_GetSensorData();
             HAL_UART_Transmit_DMA( &huart1, (uint8_t *) data->SensorDataAvg, 2U * CFG_CCD_NUM_PIXELS );
         }
+
+        CLI_CheckInputBuffer();
     }
 }
 
