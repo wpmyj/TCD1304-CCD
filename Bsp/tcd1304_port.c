@@ -627,16 +627,11 @@ void TCD_ICG_TIMER_INTERRUPT_HANDLER(void)
  *
  ******************************************************************************/
 void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
-{
-    if ( __HAL_DMA_GET_FLAG( &hdma_adc3, DMA_FLAG_TCIF0_4) )
-    {
-        TCD_PORT_DisableADCTrigger();
-    
-        /* Do something with the acquired AD samples in RAM */
-        TCD_ReadCompletedCallback();
-    }
-    
+{   
     HAL_DMA_IRQHandler( &hdma_adc3 );
+    
+    /* Do something with the acquired AD samples in RAM */
+    TCD_ReadCompletedCallback();
 }
 
 /****************************** END OF FILE ***********************************/
