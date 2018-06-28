@@ -27,7 +27,7 @@
 #include "tcd1304.h"
 
 /* Private defines -----------------------------------------------------------*/
-#define RING_BUFFER_SIZE                ((uint32_t) 12U)
+#define RING_BUFFER_SIZE                ((uint32_t) 256U)
 #define CMD_BUFFER_SIZE                 ((uint32_t) 10U)
 #define PARAM_BUFFER_SIZE               ((uint32_t) 20U)
 #define COMMAND_BUFFER_SIZE             ((uint32_t) CMD_BUFFER_SIZE + PARAM_BUFFER_SIZE + 2U)
