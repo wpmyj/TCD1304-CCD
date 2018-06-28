@@ -24,7 +24,7 @@ UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
 
-static uint8_t UART_RxBuf[12];
+uint8_t UART_RxBuf[12];
 volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
@@ -53,10 +53,10 @@ volatile uint8_t requestToSendFlag = 0;
  * At every avg x t_icg_us = 1.52 seconds averaged data is available for readout.
  *
  ******************************************************************************/
-static TCD_CONFIG_t sensor_config =
+TCD_CONFIG_t sensor_config =
 {
     .avg = 400,             /* Averaging:        400    */
-    .f_master = 4000000,    /* Master clock:     2 MHz  */
+    .f_master = 4000000,    /* Master clock:     4 MHz  */
     .t_icg_us = 3800,       /* Readout period:   3.8 ms */
     .t_int_us = 10,         /* Integration time: 10 us  */
 };
@@ -95,7 +95,7 @@ int main(void)
     {
         _Error_Handler( __FILE__, __LINE__ );
     }
-
+    
     while ( 1 )
     {
         if ( (TCD_IsDataReady() == 1) && (requestToSendFlag == 1U) )
