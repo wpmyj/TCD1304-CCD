@@ -547,7 +547,7 @@ int32_t TCD_PORT_StartADC(uint16_t *dataBuffer)
  ******************************************************************************/
 static void TCD_PORT_EnableADCTrigger(void)
 {
-    TCD_ADC_TRIG_TIMER->CR1 = TIM_CR1_CEN;
+    TCD_ADC_TRIG_TIMER->CR1 |= TIM_CR1_CEN;
 }
 
 /*******************************************************************************
