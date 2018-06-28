@@ -14,7 +14,27 @@
  *
  *******************************************************************************
  *
- * COPYRIGHT(c) 2018 Dung Do Dang
+ * MIT License
+ *
+ * Copyright (c) 2018 Dung Do Dang
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  *******************************************************************************
  */
@@ -71,7 +91,7 @@ void TCD_PORT_Run(void)
 {
     TCD_PORT_ICG_SetDelay( CFG_ICG_DEFAULT_PULSE_DELAY_CNT );
     TCD_PORT_SH_SetDelay( CFG_SH_DEFAULT_PULSE_DELAY_CNT );
-    
+
     /* Disable the DMA transfer half complete interrupt */
     __HAL_DMA_DISABLE_IT( &hdma_adc3, DMA_IT_HT );
 
@@ -79,7 +99,7 @@ void TCD_PORT_Run(void)
     htim2.Instance->CNT = 0U;
     htim14.Instance->CNT = 0U;
     htim13.Instance->CNT = 0U;
-    
+
     __HAL_TIM_ENABLE( &htim2 );         /* ICG TIMER */
     __HAL_TIM_ENABLE( &htim14 );        /* SH TIMER */
     __HAL_TIM_ENABLE( &htim13 );        /* fM TIMER */
@@ -110,7 +130,7 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     int32_t err = 0;
     uint32_t period = (HAL_RCC_GetSysClockFreq() / 2U) / freq - 1U;
     timer_conf.f_master = freq;
-    
+
     /* Peripheral clock enable */
     __HAL_RCC_TIM13_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -131,7 +151,7 @@ int32_t TCD_PORT_ConfigMasterClock(uint32_t freq)
     #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     #endif
-    
+
     if ( HAL_TIM_Base_Init( &htim13 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -184,7 +204,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
     uint32_t period = (uint32_t) ((uint64_t) t_icg_us * CFG_FM_FREQUENCY_HZ / 1000000U) - 1U;
     uint32_t pulse = CFG_ICG_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
     timer_conf.t_icg_us = t_icg_us;
-    
+
     /* Peripheral clock enable */
     __HAL_RCC_TIM2_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -205,7 +225,7 @@ int32_t TCD_PORT_ConfigICGClock(const uint32_t t_icg_us)
     #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     #endif
-    
+
     if ( HAL_TIM_Base_Init( &htim2 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -278,7 +298,7 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us)
     uint32_t period = t_int_us * CFG_FM_FREQUENCY_HZ / 1000000U - 1U;
     uint32_t pulse = CFG_SH_DEFAULT_PULSE_US * CFG_FM_FREQUENCY_HZ / 1000000U;
     timer_conf.t_int_us = t_int_us;
-    
+
     /* Peripheral clock enable */
     __HAL_RCC_TIM14_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -299,7 +319,7 @@ int32_t TCD_PORT_ConfigSHClock(const uint32_t t_int_us)
     #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
     #endif
-    
+
     if ( HAL_TIM_Base_Init( &htim14 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -350,7 +370,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
     uint32_t period = HAL_RCC_GetSysClockFreq() / Fs - 1U;
     timer_conf.Fs = Fs;
-    
+
     /* Peripheral clock enable */
     __HAL_RCC_TIM8_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -372,7 +392,7 @@ void TCD_PORT_ConfigADCTrigger(uint32_t Fs)
     #ifdef TIM_AUTORELOAD_PRELOAD_DISABLE
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     #endif
-    
+
     if ( HAL_TIM_Base_Init( &htim8 ) != HAL_OK )
     {
         _Error_Handler( __FILE__, __LINE__ );
@@ -516,7 +536,7 @@ int32_t TCD_PORT_InitADC(void)
     #else
     sConfig.Rank = 1U;
     #endif
-    
+
     sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
 
     if ( HAL_ADC_ConfigChannel( &hadc3, &sConfig ) != HAL_OK )
@@ -641,9 +661,9 @@ void TCD_ICG_TIMER_INTERRUPT_HANDLER(void)
  *
  ******************************************************************************/
 void TCD_CCD_ADC_INTERRUPT_HANDLER(void)
-{   
+{
     HAL_DMA_IRQHandler( &hdma_adc3 );
-    
+
     /* Do something with the acquired AD samples in RAM */
     TCD_ReadCompletedCallback();
 }

@@ -8,7 +8,27 @@
  *
  *******************************************************************************
  *
- * COPYRIGHT(c) 2003 - 2018 Dung Do Dang
+ * MIT License
+ *
+ * Copyright (c) 2018 Dung Do Dang
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  *******************************************************************************
  */
@@ -25,7 +45,7 @@ UART_HandleTypeDef huart1;
 volatile uint8_t requestToSendFlag = 0;
 
 /* Private variables ---------------------------------------------------------*/
-const char HEADER[] = 
+const char HEADER[] =
 "--------------------------------------\r\n"
 "          STM32F746 Discovery         \r\n"
 "          TCD1304 Linear CCD          \r\n"
@@ -75,10 +95,10 @@ int main(void)
 {
     /* Initialize the MCU and all configured peripherals */
     MCU_Init();
-    
+
     /* Display some welcome text to the user */
     HAL_UART_Transmit( &huart1, (uint8_t *) HEADER, strlen(HEADER), 1000U );
-    
+
     /* Initialize the command line interface (CLI) */
     if ( CLI_Init( &huart1 ) != CLI_OK )
     {
